@@ -1,12 +1,16 @@
-import Form from "@/components/form";
+import LoginForm from "@/components/loginForm";
 
 export const metadata = {
   title: 'Login',
-  description: 'lorem ipsum dolor sit amet, consectetur adip',
+  description: 'Login page',
 };
 
+
 export default function App() {
+
   return (
-    <Form type={'login'}/>
+    <>
+      <LoginForm/>
+    </>
   );
 }
