@@ -1,10 +1,10 @@
 'use client';
-import LoginForm from "@/components/loginForm";
+import RegisterForm from "@/components/registerForm";
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const session = useSession();
   const router = useRouter();
 
@@ -16,8 +16,8 @@ export default function LoginPage() {
 
   return (
     <>
-      <h2>Login form</h2>
-      <LoginForm/>
+      <h2>Registration form</h2>
+      <RegisterForm/>
     </>
   );
 }

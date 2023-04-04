@@ -9,7 +9,7 @@ const prisma = new PrismaClient()
 export const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
         email: {label: "Email", type: "text"},
         password: {label: "Password", type: "password"},

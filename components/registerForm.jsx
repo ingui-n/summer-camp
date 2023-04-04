@@ -3,12 +3,13 @@
 import {Button, TextField} from "@mui/material";
 import {useFormik} from "formik";
 import * as Yup from "yup";
-import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
+import registerUser from "@/lib/registerUser";
 
 const initialValues = {
   email: "",
-  password: ""
+  password: "",
+  confirmPassword: ''
 };
 
 const validationSchema = Yup.object().shape({
@@ -17,15 +18,18 @@ const validationSchema = Yup.object().shape({
     .required("Required"),
   password: Yup.string()
     .required("Required")
+    .min(6, "Password must be at least 6 characters long"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
 });
 
 
-export default function LoginForm() {
-  const submitForm = async ({email, password}, bag) => {
+export default function RegisterForm() {
+  const submitForm = async ({email, password}, bag) => {//todo to the backend we go
     bag.resetForm(initialValues);
     bag.setFieldValue('email', email);
 
-    const {ok, status} = await signIn("credentials", {email, password, redirect: false});
+    const {ok, status} = await registerUser(email, password);//todo test
 
     if (ok) {
       router.push("/");
@@ -47,8 +51,7 @@ export default function LoginForm() {
     <>
       <form onSubmit={formik.handleSubmit}>
         <TextField
-          name="email"
-          type='text'
+          type='email'
           label='Email'
           value={formik.values.email}
           onChange={formik.handleChange}
@@ -56,7 +59,6 @@ export default function LoginForm() {
           helperText={formik.touched.email && formik.errors.email}
         />
         <TextField
-          name="password"
           type='password'
           label='Password'
           value={formik.values.password}
@@ -64,7 +66,15 @@ export default function LoginForm() {
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
         />
-        <Button type='submit'>Submit</Button>
+        <TextField
+          type='password'
+          label='Retype password'
+          value={formik.values.confirmPassword}
+          onChange={formik.handleChange}
+          error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+          helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+        />
+        <Button type='submit'>Register</Button>
       </form>
     </>
   );
