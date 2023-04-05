@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
-import {PrismaClient} from '@prisma/client';
 import {hash} from "bcrypt";
+import prisma from '@/lib/prisma';
 
 export async function POST(request) {
   const {email, password} = await request.json();
@@ -8,8 +8,6 @@ export async function POST(request) {
   if (!email || !password) {
     return NextResponse.json({error: 'Missing email or password'}, {status: 400});
   }
-
-  const prisma = new PrismaClient();
 
   const exists = await prisma.user.findUnique({
     where: {email}

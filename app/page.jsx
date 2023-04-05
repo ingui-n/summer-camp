@@ -1,7 +1,5 @@
-// 'use client';
-import Form from "@/components/form";
 import SignOut from "@/components/sign-out";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {getServerSession} from "next-auth/next";
 
 export const metadata = {
@@ -9,25 +7,18 @@ export const metadata = {
   description: 'some content',
 };
 
-export default async function Home() {
-  const session = await getServerSession(authOptions);
+export default function Home() {
+  const session = getServerSession(authOptions);
 
   return (
     <>
-      {!session && <Form type={'login'}/>}
       {!!session && <SignOut/>}
-      {/*<Form type={'register'}/>*/}
     </>
   );
 };
 
-async function getData() {
+async function getStaticProps() {
   //todo fetch data
 
-
-  return {
-    props: {
-      data: 'users'
-    }
-  };
+  return {data: 'fsd'};
 }
