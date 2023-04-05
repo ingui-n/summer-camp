@@ -7,8 +7,8 @@ export const metadata = {
   description: 'some content',
 };
 
-export default function Home() {
-  const session = getServerSession(authOptions);
+export default async function Home() {
+  const session = await getServerSession(authOptions);
 
   return (
     <>
@@ -17,7 +17,7 @@ export default function Home() {
   );
 };
 
-async function getStaticProps() {
+async function getData() {
   //todo fetch data
 
   return {data: 'fsd'};
