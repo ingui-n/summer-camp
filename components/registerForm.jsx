@@ -4,7 +4,8 @@ import {Button, TextField} from "@mui/material";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {useRouter} from "next/navigation";
-import registerUser from "@/lib/registerUser";
+import axios from "axios";
+import {signIn} from "next-auth/react";
 
 const initialValues = {
   email: "",
@@ -20,19 +21,25 @@ const validationSchema = Yup.object().shape({
     .required("Required")
     .min(6, "Password must be at least 6 characters long"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
+    .oneOf([Yup.ref("password") || undefined], "Passwords must match")
 });
 
 
 export default function RegisterForm() {
-  const submitForm = async ({email, password}, bag) => {//todo to the backend we go
+  const submitForm = async ({email, password}, bag) => {
     bag.resetForm(initialValues);
     bag.setFieldValue('email', email);
 
-    const {ok, status} = await registerUser(email, password);//todo test
+    const res = await axios.post('/api/auth', {email, password});
 
-    if (ok) {
-      router.push("/");
+    if (res.status === 201) {
+      const {ok, status} = await signIn("credentials", {email, password, redirect: false});
+
+      if (ok) {
+        router.push("/");
+      } else {
+        //todo errors with status
+      }
     } else {
       //todo errors with status
     }
@@ -51,6 +58,7 @@ export default function RegisterForm() {
     <>
       <form onSubmit={formik.handleSubmit}>
         <TextField
+          name='email'
           type='email'
           label='Email'
           value={formik.values.email}
@@ -59,6 +67,7 @@ export default function RegisterForm() {
           helperText={formik.touched.email && formik.errors.email}
         />
         <TextField
+          name='password'
           type='password'
           label='Password'
           value={formik.values.password}
@@ -67,6 +76,7 @@ export default function RegisterForm() {
           helperText={formik.touched.password && formik.errors.password}
         />
         <TextField
+          name='confirmPassword'
           type='password'
           label='Retype password'
           value={formik.values.confirmPassword}
