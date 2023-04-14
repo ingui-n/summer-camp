@@ -9,14 +9,14 @@ export async function POST(request) {
     return NextResponse.json({error: 'Missing email or password'}, {status: 400});
   }
 
-  const exists = await prisma.user.findUnique({
+  const exists = await prisma.Login.findUnique({
     where: {email}
   });
 
   if (exists) {
     return NextResponse.json({error: 'User already exists'}, {status: 400});
   } else {
-    const user = await prisma.user.create({
+    const user = await prisma.Login.create({
       data: {
         email,
         password: await hash(password, 10)
