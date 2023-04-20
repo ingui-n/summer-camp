@@ -6,43 +6,53 @@ import * as Yup from "yup";
 import {useRouter} from "next/navigation";
 import axios from "axios";
 import {signIn} from "next-auth/react";
+import {useRef} from "react";
 
 const initialValues = {
-  email: "",
-  password: "",
-  confirmPassword: ''
+  login: '',
+  email: '',
+  password: ''
 };
 
 const validationSchema = Yup.object().shape({
+  login: Yup.string()
+    .required("Required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Required"),
   password: Yup.string()
     .required("Required")
-    .min(6, "Password must be at least 6 characters long"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password") || undefined], "Passwords must match")
+    .min(6, "Password must be at least 6 characters long")
 });
 
 
 export default function RegisterForm() {
-  const submitForm = async ({email, password}, bag) => {
+  const submitForm = async ({login, email, password}, bag) => {
     bag.resetForm(initialValues);
+    bag.setFieldValue('login', login);
     bag.setFieldValue('email', email);
 
-    const res = await axios.post('/api/auth', {email, password});
+    axios.post('/api/auth', {login, email, password})
+      .then(async () => {
+        const {ok, status} = await signIn("credentials", {
+          login,
+          password,
+          redirect: false
+        });
 
-    if (res.status === 201) {
-      const {ok, status} = await signIn("credentials", {email, password, redirect: false});
+        if (ok) {
+          router.push("/");
+        } else {
+          //todo errors with status
+        }
+      })
+      .catch(err => {
+        errorP.current.textContent = err.response.data.error;
+      });
+  };
 
-      if (ok) {
-        router.push("/");
-      } else {
-        //todo errors with status
-      }
-    } else {
-      //todo errors with status
-    }
+  const redirect = () => {
+    router.push("/");
   };
 
   const router = useRouter();
@@ -53,13 +63,27 @@ export default function RegisterForm() {
       onSubmit: submitForm,
     }
   );
+  const errorP = useRef(null);
 
   return (
-    <>
-      <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit}>
+      <div className="message">
+        <h2>Registration Form</h2>
+      </div>
+      <p>Please fill out the following details:</p>
+      <div className="content">
+        <TextField
+          name='login'
+          type='text'
+          label='Login'
+          value={formik.values.login}
+          onChange={formik.handleChange}
+          error={formik.touched.login && Boolean(formik.errors.login)}
+          helperText={formik.touched.login && formik.errors.login}
+        />
         <TextField
           name='email'
-          type='email'
+          type='text'
           label='Email'
           value={formik.values.email}
           onChange={formik.handleChange}
@@ -75,17 +99,12 @@ export default function RegisterForm() {
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
         />
-        <TextField
-          name='confirmPassword'
-          type='password'
-          label='Retype password'
-          value={formik.values.confirmPassword}
-          onChange={formik.handleChange}
-          error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-          helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
-        />
-        <Button type='submit'>Register</Button>
-      </form>
-    </>
+      </div>
+      <p className='message-error' ref={errorP}></p>
+      <div className="buttons">
+        <Button variant="outlined" onClick={redirect}>Cancel</Button>
+        <Button type='submit' variant="contained">Register</Button>
+      </div>
+    </form>
   );
 }

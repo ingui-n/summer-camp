@@ -7,167 +7,167 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Camp {
-  Date_from    DateTime       @db.Date
-  Date_to      DateTime       @db.Date
-  Description  String?        @db.VarChar(4000)
-  Name         String         @db.VarChar(50)
-  Price        Int
-  CampID       Int            @id @default(autoincrement()) @db.UnsignedInt
-  DirectoryID  Int            @db.UnsignedInt
-  Directory    Directory      @relation(fields: [DirectoryID], references: [DirectoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Camp_Directory")
-  Menu         Menu[]
-  Program      Program[]
-  Registration Registration[]
-  Worker       Worker[]
+model camp {
+  date_from    DateTime       @db.Date
+  date_to      DateTime       @db.Date
+  description  String?        @db.VarChar(4000)
+  name         String         @db.VarChar(50)
+  price        Int
+  campID       Int            @id @default(autoincrement()) @db.UnsignedInt
+  directoryID  Int            @db.UnsignedInt
+  directory    directory      @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Camp_Directory")
+  menu         menu[]
+  program      program[]
+  registration registration[]
+  worker       worker[]
 
-  @@index([DirectoryID], map: "FK_Camp_Directory")
+  @@index([directoryID], map: "directoryID")
 }
 
-model City {
-  City        String    @db.VarChar(60)
-  Zip_code    Int
-  CityID      Int       @id @default(autoincrement()) @db.UnsignedInt
-  DirectoryID Int       @db.UnsignedInt
-  Directory   Directory @relation(fields: [DirectoryID], references: [DirectoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_City_Directory")
+model city {
+  city        String    @db.VarChar(60)
+  zip_code    Int
+  cityID      Int       @id @default(autoincrement()) @db.UnsignedInt
+  directoryID Int       @db.UnsignedInt
+  directory   directory @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_City_Directory")
 
-  @@index([DirectoryID], map: "FK_City_Directory")
+  @@index([directoryID], map: "directoryID")
 }
 
-model Directory {
-  Street               String                 @db.VarChar(50)
-  DirectoryID          Int                    @id @default(autoincrement()) @db.UnsignedInt
-  Camp                 Camp[]
-  City                 City[]
-  Legal_representative Legal_representative[]
-  User                 User[]
+model directory {
+  street               String                 @db.VarChar(50)
+  directoryID          Int                    @id @default(autoincrement()) @db.UnsignedInt
+  camp                 camp[]
+  city                 city[]
+  legal_representative legal_representative[]
+  user                 user[]
 }
 
-model Food {
-  Allergen    String? @db.VarChar(100)
-  Description String? @db.VarChar(750)
-  Name        String  @db.VarChar(75)
-  Type        Int     @db.TinyInt
-  FoodID      Int     @id @default(autoincrement()) @db.UnsignedInt
-  Menu        Menu[]
+model food {
+  allergen    String? @db.VarChar(100)
+  description String? @db.VarChar(750)
+  name        String  @db.VarChar(75)
+  type        Int     @db.TinyInt
+  foodID      Int     @id @default(autoincrement()) @db.UnsignedInt
+  menu        menu[]
 }
 
-model Job {
-  Description String?  @db.VarChar(250)
-  Type        Int      @db.TinyInt
-  JobID       Int      @id @default(autoincrement()) @db.UnsignedInt
-  Worker      Worker[]
+model job {
+  description String?  @db.VarChar(250)
+  type        Int      @db.TinyInt
+  jobID       Int      @id @default(autoincrement()) @db.UnsignedInt
+  worker      worker[]
 }
 
-model Legal_representative {
-  Birthdate              DateTime  @db.Date
-  Email                  String    @db.VarChar(50)
-  First_name             String    @db.VarChar(30)
-  Last_name              String    @db.VarChar(30)
-  Phone_number           BigInt
-  Pin                    BigInt
-  Legal_representativeID Int       @id @default(autoincrement()) @db.UnsignedInt
-  DirectoryID            Int       @db.UnsignedInt
-  Directory              Directory @relation(fields: [DirectoryID], references: [DirectoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Legal_representative_Directory")
-  User                   User[]
+model legal_representative {
+  birthdate              DateTime  @db.Date
+  email                  String    @db.VarChar(50)
+  first_name             String    @db.VarChar(30)
+  last_name              String    @db.VarChar(30)
+  phone_number           BigInt
+  pin                    BigInt
+  legal_representativeID Int       @id @default(autoincrement()) @db.UnsignedInt
+  directoryID            Int       @db.UnsignedInt
+  directory              directory @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Legal_representative_Directory")
+  user                   user[]
 
-  @@index([DirectoryID], map: "FK_Legal_representative_Directory")
+  @@index([directoryID], map: "FK_Legal_representative_Directory")
 }
 
-model Login {
-  Function_type Int      @db.TinyInt
-  Login         String   @db.VarChar(30)
-  Password      String   @db.VarChar(60)
-  LoginID       Int      @id @default(autoincrement()) @db.UnsignedInt
-  User          User[]
-  Worker        Worker[]
+model menu {
+  time   DateTime @db.DateTime(0)
+  menuID Int      @id @default(autoincrement()) @db.UnsignedInt
+  campID Int      @db.UnsignedInt
+  foodID Int      @db.UnsignedInt
+  camp   camp     @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Menu_Camp")
+  food   food     @relation(fields: [foodID], references: [foodID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Menu_Food")
+
+  @@index([campID], map: "FK_Menu_Camp")
+  @@index([foodID], map: "FK_Menu_Food")
 }
 
-model Menu {
-  Time   DateTime @db.DateTime(0)
-  MenuID Int      @id @default(autoincrement()) @db.UnsignedInt
-  CampID Int      @db.UnsignedInt
-  FoodID Int      @db.UnsignedInt
-  Camp   Camp     @relation(fields: [CampID], references: [CampID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Menu_Camp")
-  Food   Food     @relation(fields: [FoodID], references: [FoodID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Menu_Food")
-
-  @@index([CampID], map: "FK_Menu_Camp")
-  @@index([FoodID], map: "FK_Menu_Food")
+model profile {
+  modification_date DateTime @db.DateTime(0)
+  suffix            String   @db.VarChar(8)
+  type              String   @db.VarChar(50)
+  upload_date       DateTime @db.DateTime(0)
+  profileID         Int      @id @default(autoincrement()) @db.UnsignedInt
+  worker            worker[]
 }
 
-model Profile {
-  Modification_date DateTime @db.DateTime(0)
-  Suffix            String   @db.VarChar(8)
-  Type              String   @db.VarChar(50)
-  Upload_date       DateTime @db.DateTime(0)
-  ProfileID         Int      @id @default(autoincrement()) @db.UnsignedInt
-  Worker            Worker[]
+model program {
+  description String?  @db.VarChar(4000)
+  from        DateTime @db.DateTime(0)
+  name        String   @db.VarChar(60)
+  to          DateTime @db.DateTime(0)
+  programID   Int      @id @default(autoincrement()) @db.UnsignedInt
+  campID      Int      @db.UnsignedInt
+  camp        camp     @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Program_Camp")
+
+  @@index([campID], map: "FK_Program_Camp")
 }
 
-model Program {
-  Description String?  @db.VarChar(4000)
-  From        DateTime @db.DateTime(0)
-  Name        String   @db.VarChar(60)
-  To          DateTime @db.DateTime(0)
-  ProgramID   Int      @id @default(autoincrement()) @db.UnsignedInt
-  CampID      Int      @db.UnsignedInt
-  Camp        Camp     @relation(fields: [CampID], references: [CampID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Program_Camp")
+model registration {
+  date           DateTime @db.DateTime(0)
+  is_paid        Boolean
+  registrationID Int      @id @default(autoincrement()) @db.UnsignedInt
+  userID         Int      @db.UnsignedInt
+  campID         Int      @db.UnsignedInt
+  camp           camp     @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_registration_camp")
+  user           user     @relation(fields: [userID], references: [userID], onDelete: NoAction, onUpdate: NoAction, map: "FK_registration_user")
 
-  @@index([CampID], map: "FK_Program_Camp")
+  @@index([campID], map: "FK_registration_camp")
+  @@index([userID], map: "userID")
 }
 
-model Registration {
-  Date           DateTime @db.DateTime(0)
-  Is_paid        Boolean
-  RegistrationID Int      @id @default(autoincrement()) @db.UnsignedInt
-  UserID         Int      @db.UnsignedInt
-  CampID         Int      @db.UnsignedInt
-  Camp           Camp     @relation(fields: [CampID], references: [CampID], onDelete: NoAction, onUpdate: NoAction, map: "FK_registration_camp")
-  User           User     @relation(fields: [UserID], references: [UserID], onDelete: NoAction, onUpdate: NoAction, map: "FK_registration_user")
+model user {
+  birthdate              DateTime              @db.Date
+  first_name             String                @db.VarChar(30)
+  last_name              String                @db.VarChar(30)
+  phone_number           BigInt
+  pin                    BigInt
+  userID                 Int                   @id @default(autoincrement()) @db.UnsignedInt
+  directoryID            Int                   @db.UnsignedInt
+  legal_representativeID Int?                  @db.UnsignedInt
+  loginID                Int                   @db.UnsignedInt
+  registration           registration[]
+  directory              directory             @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Directory")
+  legal_representative   legal_representative? @relation(fields: [legal_representativeID], references: [legal_representativeID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Legal_representative")
+  login                  login                 @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Login")
 
-  @@index([CampID], map: "FK_registration_camp")
-  @@index([UserID], map: "FK_registration_user")
+  @@index([directoryID], map: "FK_User_Directory")
+  @@index([legal_representativeID], map: "FK_User_Legal_representative")
+  @@index([loginID], map: "FK_User_Login")
 }
 
-model User {
-  Birthdate              DateTime              @db.Date
-  Email                  String                @db.VarChar(50)
-  First_name             String                @db.VarChar(30)
-  Last_name              String                @db.VarChar(30)
-  Phone_number           BigInt
-  Pin                    BigInt
-  UserID                 Int                   @id @default(autoincrement()) @db.UnsignedInt
-  DirectoryID            Int                   @db.UnsignedInt
-  Legal_representativeID Int?                  @db.UnsignedInt
-  LoginID                Int                   @db.UnsignedInt
-  Registration           Registration[]
-  Directory              Directory             @relation(fields: [DirectoryID], references: [DirectoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Directory")
-  Legal_representative   Legal_representative? @relation(fields: [Legal_representativeID], references: [Legal_representativeID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Legal_representative")
-  Login                  Login                 @relation(fields: [LoginID], references: [LoginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Login")
+model worker {
+  email        String? @db.VarChar(50)
+  first_name   String? @db.VarChar(35)
+  last_name    String? @db.VarChar(35)
+  phone_number BigInt?
+  title        String? @db.VarChar(20)
+  workerID     Int     @id @default(autoincrement()) @db.UnsignedInt
+  campID       Int     @db.UnsignedInt
+  jobID        Int     @db.UnsignedInt
+  loginID      Int?    @db.UnsignedInt
+  profileID    Int     @db.UnsignedInt
+  camp         camp    @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Camp")
+  job          job     @relation(fields: [jobID], references: [jobID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Job")
+  login        login?  @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Login")
+  profile      profile @relation(fields: [profileID], references: [profileID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Profile")
 
-  @@index([DirectoryID], map: "FK_User_Directory")
-  @@index([Legal_representativeID], map: "FK_User_Legal_representative")
-  @@index([LoginID], map: "FK_User_Login")
+  @@index([campID], map: "FK_Worker_Camp")
+  @@index([jobID], map: "FK_Worker_Job")
+  @@index([loginID], map: "FK_Worker_Login")
+  @@index([profileID], map: "FK_Worker_Profile")
 }
 
-model Worker {
-  Email        String? @db.VarChar(50)
-  First_name   String? @db.VarChar(35)
-  Last_name    String? @db.VarChar(35)
-  Phone_number BigInt?
-  Title        String? @db.VarChar(20)
-  WorkerID     Int     @id @default(autoincrement()) @db.UnsignedInt
-  CampID       Int     @db.UnsignedInt
-  JobID        Int     @db.UnsignedInt
-  LoginID      Int?    @db.UnsignedInt
-  ProfileID    Int     @db.UnsignedInt
-  Camp         Camp    @relation(fields: [CampID], references: [CampID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Camp")
-  Job          Job     @relation(fields: [JobID], references: [JobID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Job")
-  Login        Login?  @relation(fields: [LoginID], references: [LoginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Login")
-  Profile      Profile @relation(fields: [ProfileID], references: [ProfileID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Profile")
-
-  @@index([CampID], map: "FK_Worker_Camp")
-  @@index([JobID], map: "FK_Worker_Job")
-  @@index([LoginID], map: "FK_Worker_Login")
-  @@index([ProfileID], map: "FK_Worker_Profile")
+model login {
+  email         String   @db.VarChar(50)
+  function_type Int      @db.TinyInt
+  login         String   @unique(map: "login") @db.VarChar(30)
+  password      String   @db.VarChar(60)
+  loginID       Int      @id @default(autoincrement()) @db.UnsignedInt
+  user          user[]
+  worker        worker[]
 }

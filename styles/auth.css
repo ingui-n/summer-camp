@@ -1,0 +1,117 @@
+/* Set background gradient */
+body {
+    background: linear-gradient(to bottom, rgb(16, 3, 41), rgb(64, 4, 4));
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Center the card */
+.card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Style the card */
+.card {
+    background-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 50px;
+    border-radius: 10px;
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Style the buttons */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.large-button {
+    display: block;
+    width: 50%;
+    height: 60px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+    border: none; /* remove default button style */
+}
+
+.black {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+}
+
+.white {
+    background-color: white;
+    color: black;
+}
+
+/* Center the text and input fields */
+.message, .content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Increase text size */
+.message h2 {
+    font-size: 3rem;
+}
+
+/* Remove margin bottom from "PŘIHLÁŠENÍ" */
+.message h2 {
+    margin-bottom: 0;
+}
+
+.message-error {
+    color: red;
+}
+
+/* Small screens */
+@media only screen and (max-width: 768px) {
+    .card {
+        padding: 30px;
+        max-width: 85%;
+    }
+
+    .large-button {
+        height: 50px;
+        font-size: 18px;
+    }
+}
+
+/* Medium screens */
+@media only screen and (max-width: 992px) {
+    .card {
+        padding: 40px;
+        max-width: 90%;
+    }
+
+    .large-button {
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+/* Large screens */
+@media only screen and (min-width: 1200px) {
+    .card {
+        padding: 50px;
+        width: 700px;
+        max-width: none;
+    }
+
+    .large-button {
+        height: 60px;
+        font-size: 22px;
+    }
+}
+  

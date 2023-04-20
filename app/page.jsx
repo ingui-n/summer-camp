@@ -3,6 +3,7 @@ import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {getServerSession} from "next-auth/next";
 import Link from 'next/link';
 import Image from 'next/image';
+import Header from "@/components/header";
 
 export const metadata = {
   title: 'Super tábor',
@@ -14,18 +15,19 @@ export default async function Home() {
 
   return (
     <>
+      <Header/>
       {!!session && <SignOut/>}
 
-      <section class="bg">
-        <Image
-          src="/mainBackground.jpg"
-          alt="Picture"
-          fill={true}
-          className="bgImage"
-        />
+      <section className="bg">
+        {/*<Image*/}
+        {/*  src="/mainBackground.jpg"*/}
+        {/*  alt="Picture"*/}
+        {/*  fill={true}*/}
+        {/*  className="bgImage"*/}
+        {/*/>*/}
         <div className='bgContent'>
           <h1>Kdo si hraje nezlobí!</h1>
-          <div class="flex-parent">
+          <div className="flex-parent">
             <Link href='/login' className='black main-btn'>PŘIHLÁSIT SE</Link>
             <Link href='/camps' className='white main-btn'>NABÍDKA</Link>
           </div>

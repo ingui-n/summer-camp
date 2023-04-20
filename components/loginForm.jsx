@@ -5,33 +5,38 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
+import {useRef} from "react";
 
 const initialValues = {
-  email: "",
+  login: "",
   password: ""
 };
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Required"),
+  login: Yup.string()
+    .required("Required"),//todo
   password: Yup.string()
     .required("Required")
 });
 
 
 export default function LoginForm() {
-  const submitForm = async ({email, password}, bag) => {
+  const submitForm = async ({login, password}, bag) => {
     bag.resetForm(initialValues);
-    bag.setFieldValue('email', email);
+    bag.setFieldValue('login', login);
 
-    const {ok, status} = await signIn("credentials", {email, password, redirect: false});
+    const {ok, status} = await signIn("credentials", {login, password, redirect: false});
 
     if (ok) {
       router.push("/");
     } else {
+      errorP.current.innerText = "Login nebo heslo nesprávné!";
       //todo errors with status
     }
+  };
+
+  const redirect = () => {
+    router.push("/");
   };
 
   const router = useRouter();
@@ -42,29 +47,40 @@ export default function LoginForm() {
       onSubmit: submitForm,
     }
   );
+  const errorP = useRef(null);
 
   return (
     <>
+      <div className="message">
+        <h2>Přihlášení</h2>
+      </div>
+      <p>Prosím vložte svůj email a heslo!</p>
       <form onSubmit={formik.handleSubmit}>
-        <TextField
-          name="email"
-          type='text'
-          label='Email'
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
-        <TextField
-          name="password"
-          type='password'
-          label='Password'
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-        />
-        <Button type='submit'>Submit</Button>
+        <div className="content">
+          <TextField
+            name="login"
+            type='text'
+            label='Login'
+            value={formik.values.login}
+            onChange={formik.handleChange}
+            error={formik.touched.login && Boolean(formik.errors.login)}
+            helperText={formik.touched.login && formik.errors.login}
+          />
+          <TextField
+            name="password"
+            type='password'
+            label='Password'
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+          />
+        </div>
+        <p className='message-error' ref={errorP}></p>
+        <div className="buttons">
+          <Button variant="outlined" onClick={redirect}>Zpět</Button>
+          <Button type='submit' variant="contained">Přihlásit se</Button>
+        </div>
       </form>
     </>
   );

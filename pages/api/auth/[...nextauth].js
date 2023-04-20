@@ -9,17 +9,17 @@ export const authOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: {label: "Email", type: "text"},
+        email: {label: "Login", type: "text"},//todo name = undefined
         password: {label: "Password", type: "password"},
       },
       async authorize(credentials) {
-        const {email, password} = credentials;
+        const {login, password} = credentials;
 
-        if (!email || !password) {
+        if (!login || !password) {
           throw new Error("Missing username or password");
         }
 
-        const user = await prisma.Login.findUnique({where: {email}});
+        const user = await prisma.login.findUnique({where: {login}});
 
         if (!user || !(await compare(password, user.password))) {
           throw new Error("Invalid username or password");

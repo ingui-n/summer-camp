@@ -1,8 +1,6 @@
-// import '@/styles/globals.css';
-import '@/styles/style.css';
+import '@/styles/globals.css';
 import {Roboto} from "next/font/google";
 import RootProviders from "@/components/RootProviders";
-import Header from "@/components/header";
 
 export const metadata = {
   title: {
@@ -17,12 +15,11 @@ const roboto = Roboto({
   variable: "--font-roboto"
 });
 
-export default function RootLayout({children}) {
+export default function Layout({children}) {
   return (
     <html lang="cs">
     <body className={roboto.className}>
     <RootProviders>
-      <Header/>
       {children}
     </RootProviders>
     </body>

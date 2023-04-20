@@ -13,4 +13,6 @@ Software requirements: `nodejs >= 18.0.0, npm >= 8.0.0`
 3. After installation run `npm run dev` to run development server. 
 4. The server is running on [http://localhost:3000](http://localhost:3000)
 
-**Don't forget to run `npx prisma introspect` after db update!**
+**Don't forget to run `prisma db pull && prisma generate` after db update!**
+
+Make field unique `ALTER TABLE 'table' ADD UNIQUE ('field')`
