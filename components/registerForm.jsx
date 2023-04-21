@@ -6,7 +6,8 @@ import * as Yup from "yup";
 import {useRouter} from "next/navigation";
 import axios from "axios";
 import {signIn} from "next-auth/react";
-import {useRef} from "react";
+import React, {useRef} from "react";
+import Link from "next/link";
 
 const initialValues = {
   login: '',
@@ -49,10 +50,6 @@ export default function RegisterForm() {
       .catch(err => {
         errorP.current.textContent = err.response.data.error;
       });
-  };
-
-  const redirect = () => {
-    router.push("/");
   };
 
   const router = useRouter();
@@ -102,7 +99,12 @@ export default function RegisterForm() {
       </div>
       <p className='message-error' ref={errorP}></p>
       <div className="buttons">
-        <Button variant="outlined" onClick={redirect}>Cancel</Button>
+        <div className='login-register'>
+          <p>Již jste se zaregistrovali?</p>
+          <Link href='/login'>
+            <Button variant="outlined">Přihlásit se</Button>
+          </Link>
+        </div>
         <Button type='submit' variant="contained">Register</Button>
       </div>
     </form>

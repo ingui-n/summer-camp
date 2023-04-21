@@ -4,6 +4,19 @@ body {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.login-register {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+@media screen and (max-width: 550px) {
+    .login-register {
+        flex-direction: column;
+    }
+}
+
 /* Center the card */
 .card-wrapper {
     display: flex;
@@ -43,16 +56,7 @@ body {
     border: none; /* remove default button style */
 }
 
-.black {
-    background-color: black;
-    color: white;
-    text-decoration: none;
-}
 
-.white {
-    background-color: white;
-    color: black;
-}
 
 /* Center the text and input fields */
 .message, .content {

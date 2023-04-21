@@ -1,0 +1,52 @@
+.detail {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.detail section {
+    margin-bottom: 40px;
+    min-height: 200px;
+    display: grid;
+    justify-content: start;
+    align-content: center;
+    background-color: #00000003;
+}
+
+.detail h1 {
+    font-size: 2rem;
+}
+
+.detail p {
+    line-height: 1.5;
+    margin-top: 20px;
+}
+
+.detail table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 800px;
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    margin: 20px auto 0;
+}
+
+.detail th, .detail td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.detail th {
+    color: black;
+}
+
+.detail tr:hover {
+    background-color: #f5f5f5;
+}
+
+.detail-links {
+    display: flex;
+    gap: 20px;
+}

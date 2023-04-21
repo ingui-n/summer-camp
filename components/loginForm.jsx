@@ -5,7 +5,8 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import {useRef} from "react";
+import React, {useRef} from "react";
+import Link from "next/link";
 
 const initialValues = {
   login: "",
@@ -33,10 +34,6 @@ export default function LoginForm() {
       errorP.current.innerText = "Login nebo heslo nesprávné!";
       //todo errors with status
     }
-  };
-
-  const redirect = () => {
-    router.push("/");
   };
 
   const router = useRouter();
@@ -78,7 +75,12 @@ export default function LoginForm() {
         </div>
         <p className='message-error' ref={errorP}></p>
         <div className="buttons">
-          <Button variant="outlined" onClick={redirect}>Zpět</Button>
+          <div className='login-register'>
+            <p>Nemáte účet?</p>
+            <Link href='/register'>
+              <Button variant="outlined">Registrovat se</Button>
+            </Link>
+          </div>
           <Button type='submit' variant="contained">Přihlásit se</Button>
         </div>
       </form>

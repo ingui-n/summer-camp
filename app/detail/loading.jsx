@@ -1,3 +1,3 @@
 export default function Loading() {
-  return 'Loading login form ...';
+  return 'Loading camp details ...';
 }

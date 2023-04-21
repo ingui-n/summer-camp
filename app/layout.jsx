@@ -15,7 +15,7 @@ const roboto = Roboto({
   variable: "--font-roboto"
 });
 
-export default function Layout({children}) {
+export default async function RootLayout({children}) {
   return (
     <html lang="cs">
     <body className={roboto.className}>
