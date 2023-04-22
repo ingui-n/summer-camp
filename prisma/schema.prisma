@@ -14,8 +14,7 @@ model camp {
   name         String         @db.VarChar(50)
   price        Int
   campID       Int            @id @default(autoincrement()) @db.UnsignedInt
-  directoryID  Int            @db.UnsignedInt
-  directory    directory      @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Camp_Directory")
+  directoryID  Int?           @db.UnsignedInt
   menu         menu[]
   program      program[]
   registration registration[]
@@ -24,32 +23,18 @@ model camp {
   @@index([directoryID], map: "directoryID")
 }
 
-model city {
-  city        String    @db.VarChar(60)
-  zip_code    Int
-  cityID      Int       @id @default(autoincrement()) @db.UnsignedInt
-  directoryID Int       @db.UnsignedInt
-  directory   directory @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_City_Directory")
-
-  @@index([directoryID], map: "directoryID")
-}
-
-model directory {
-  street               String                 @db.VarChar(50)
-  directoryID          Int                    @id @default(autoincrement()) @db.UnsignedInt
-  camp                 camp[]
-  city                 city[]
-  legal_representative legal_representative[]
-  user                 user[]
-}
-
 model food {
-  allergen    String? @db.VarChar(100)
+  alergenID   Int
   description String? @db.VarChar(750)
   name        String  @db.VarChar(75)
   type        Int     @db.TinyInt
   foodID      Int     @id @default(autoincrement()) @db.UnsignedInt
-  menu        menu[]
+  menuID      Int     @db.UnsignedInt
+  alergen     alergen @relation(fields: [alergenID], references: [alergenID], onDelete: NoAction, onUpdate: NoAction, map: "food_ibfk_1")
+  menu        menu    @relation(fields: [menuID], references: [menuID], onDelete: NoAction, onUpdate: NoAction, map: "food_ibfk_2")
+
+  @@index([alergenID], map: "alergenID")
+  @@index([menuID], map: "menuID")
 }
 
 model job {
@@ -60,15 +45,17 @@ model job {
 }
 
 model legal_representative {
-  birthdate              DateTime  @db.Date
-  email                  String    @db.VarChar(50)
-  first_name             String    @db.VarChar(30)
-  last_name              String    @db.VarChar(30)
+  psc                    BigInt
+  city                   String   @db.VarChar(30)
+  adress                 String   @db.VarChar(50)
+  birthdate              DateTime @db.Date
+  email                  String   @db.VarChar(50)
+  first_name             String   @db.VarChar(30)
+  last_name              String   @db.VarChar(30)
   phone_number           BigInt
   pin                    BigInt
-  legal_representativeID Int       @id @default(autoincrement()) @db.UnsignedInt
-  directoryID            Int       @db.UnsignedInt
-  directory              directory @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Legal_representative_Directory")
+  legal_representativeID Int      @id @default(autoincrement()) @db.UnsignedInt
+  directoryID            Int?     @db.UnsignedInt
   user                   user[]
 
   @@index([directoryID], map: "FK_Legal_representative_Directory")
@@ -78,12 +65,10 @@ model menu {
   time   DateTime @db.DateTime(0)
   menuID Int      @id @default(autoincrement()) @db.UnsignedInt
   campID Int      @db.UnsignedInt
-  foodID Int      @db.UnsignedInt
+  food   food[]
   camp   camp     @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Menu_Camp")
-  food   food     @relation(fields: [foodID], references: [foodID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Menu_Food")
 
   @@index([campID], map: "FK_Menu_Camp")
-  @@index([foodID], map: "FK_Menu_Food")
 }
 
 model profile {
@@ -120,26 +105,6 @@ model registration {
   @@index([userID], map: "userID")
 }
 
-model user {
-  birthdate              DateTime              @db.Date
-  first_name             String                @db.VarChar(30)
-  last_name              String                @db.VarChar(30)
-  phone_number           BigInt
-  pin                    BigInt
-  userID                 Int                   @id @default(autoincrement()) @db.UnsignedInt
-  directoryID            Int                   @db.UnsignedInt
-  legal_representativeID Int?                  @db.UnsignedInt
-  loginID                Int                   @db.UnsignedInt
-  registration           registration[]
-  directory              directory             @relation(fields: [directoryID], references: [directoryID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Directory")
-  legal_representative   legal_representative? @relation(fields: [legal_representativeID], references: [legal_representativeID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Legal_representative")
-  login                  login                 @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Login")
-
-  @@index([directoryID], map: "FK_User_Directory")
-  @@index([legal_representativeID], map: "FK_User_Legal_representative")
-  @@index([loginID], map: "FK_User_Login")
-}
-
 model worker {
   email        String? @db.VarChar(50)
   first_name   String? @db.VarChar(35)
@@ -170,4 +135,31 @@ model login {
   loginID       Int      @id @default(autoincrement()) @db.UnsignedInt
   user          user[]
   worker        worker[]
+}
+
+model alergen {
+  alergenID Int    @id @default(autoincrement())
+  number    Int    @unique(map: "number")
+  name      String @db.VarChar(50)
+  food      food[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user {
+  birthdate              DateTime              @db.Date
+  first_name             String                @db.VarChar(30)
+  last_name              String                @db.VarChar(30)
+  phone_number           BigInt
+  pin                    BigInt
+  userID                 Int                   @id @default(autoincrement()) @db.UnsignedInt
+  directoryID            Int?                  @db.UnsignedInt
+  legal_representativeID Int?                  @db.UnsignedInt
+  loginID                Int?                  @db.UnsignedInt
+  registration           registration[]
+  legal_representative   legal_representative? @relation(fields: [legal_representativeID], references: [legal_representativeID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Legal_representative")
+  login                  login?                @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Login")
+
+  @@index([directoryID], map: "FK_User_Directory")
+  @@index([legal_representativeID], map: "FK_User_Legal_representative")
+  @@index([loginID], map: "FK_User_Login")
 }

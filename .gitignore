@@ -1,5 +1,6 @@
 .env
 .idea
+/prisma/migrations
 
 # dependencies
 /node_modules

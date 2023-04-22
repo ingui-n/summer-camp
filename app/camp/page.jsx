@@ -1,22 +1,19 @@
-'use client';
-import ButtonUnstyled from "@mui/base/ButtonUnstyled";
-import Link from "next/link";
+import Camp from "@/app/camp/camp";
+import prisma from "@/lib/prisma";
+import {reparseJson} from "@/lib/base";
 
 
-export default function Page() {
+export default async function Page() {
+  const campData = await getCampData();
+
   return (
     <>
-      <div className="card-container">
-        <div className="card-under">
-          <div className="card">
-            <h6 className='card-header'><strong>Tábor v lesích ve stanech</strong>.</h6>
-            <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi, eaque impedit culpa quis mollitia modi voluptatem repellendus atque quae rem fugit at praesentium nisi ullam sapiente cupiditate quod ex voluptatum.</span>
-            <Link href='/detail'>
-              <ButtonUnstyled className="card-footer">PODROBNOSTI</ButtonUnstyled>
-            </Link>
-          </div>
-        </div>
-      </div>
+      <Camp campData={campData} />
     </>
   );
 }
+
+const getCampData = async () => {
+  const camp = await prisma.camp.findUnique({where: {campID: 1}});
+  return reparseJson(camp);
+};

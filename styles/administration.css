@@ -1,0 +1,110 @@
+.admin-body .container {
+    display: flex;
+    flex-direction: row;
+}
+
+.admin-body .sidebar {
+    background-color: #333;
+    color: #fff;
+    flex-basis: 15%;
+    min-height: 94vh;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-body .sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-body .sidebar ul li {
+    padding: 15px 5px;
+}
+
+.admin-body .sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.admin-body .content {
+    flex-basis: 80%;
+    padding: 20px;
+}
+
+.admin-body table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.admin-body table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.admin-body table th {
+    background-color: #eee;
+}
+
+.admin-body .navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: 6vh;
+}
+
+.admin-body .navbar .navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.admin-body .navbar .navbar-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.admin-body .btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.admin-body .btn:hover {
+    background-color: #555;
+}
+
+.admin-body .btn-create {
+    margin-bottom: 30px;
+}
+
+.admin-body .btn-logout {
+    background-color: #f44336;
+}
+
+.admin-body .btn-logout:hover {
+    background-color: #d32f2f;
+}
+
+@media screen and (max-width: 968px) {
+    .admin-body .container {
+        flex-direction: column;
+    }
+
+    .admin-body .sidebar {
+        flex-basis: 100%;
+        margin-bottom: 20px;
+        min-height: 20px;
+    }
+}

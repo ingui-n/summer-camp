@@ -2,7 +2,7 @@ import {NextResponse} from 'next/server';
 import {hash} from "bcrypt";
 import prisma from '@/lib/prisma';
 
-export async function POST(request) {//todo send access token mby?
+export async function POST(request) {
   const {login, email, password} = await request.json();
 
   if (!login || !email || !password) {
