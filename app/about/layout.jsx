@@ -1,5 +1,5 @@
 import '@/styles/about.css';
-import Header from "@/components/header";
+import Header from "@/components/Header";
 
 export const metadata = {
   title: 'About',

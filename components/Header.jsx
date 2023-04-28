@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import {useRef} from "react";
+import {useSession} from "next-auth/react";
 
 export default function Header() {
+  const session = useSession();
   const burgerRef = useRef(null);
   const navLinksRef = useRef(null);
 
@@ -12,18 +14,27 @@ export default function Header() {
     burgerRef.current.classList.toggle('toggle');
   };
 
+  const isUserAdmin = () => {
+    return session.data && session.data.user.role === 0;
+  }
+
   return (
     <header>
       <nav>
         <div className="logo">
           <Link href='/'><h2>Táborovač</h2></Link>
         </div>
+
         <ul className="nav-links" ref={navLinksRef}>
           <li><Link href='/about'>O NÁS</Link></li>
           <li><Link href='/camp'>TÁBORY</Link></li>
-          <li><Link href='/login'>PŘIHLÁSÍT SE</Link></li>
-          {/*  todo sign out */}
-          {/*  todo přihlásit se do aplikace X přihlásit se na tábor?*/}
+          {isUserAdmin()
+            && <li><Link href='/administration'>ADMINISTRACE</Link></li>
+          }
+          {session.status === 'unauthenticated'
+            ? <li><Link href='/login'>PŘIHLÁSÍT SE</Link></li>
+            : <li><Link href='/sign-out'>ODHLÁSIT SE</Link></li>
+          }
         </ul>
 
         <div className="burger" ref={burgerRef} onClick={toggles}>

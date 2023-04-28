@@ -5,7 +5,7 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import React, {useRef} from "react";
+import {useRef} from "react";
 import Link from "next/link";
 
 const initialValues = {
@@ -15,13 +15,16 @@ const initialValues = {
 
 const validationSchema = Yup.object().shape({
   login: Yup.string()
-    .required("Required"),//todo
+    .required("Required"),
   password: Yup.string()
     .required("Required")
 });
 
 
-export default function LoginForm() {
+export default function LoginForm({searchParams}) {
+  const router = useRouter();
+  const errorP = useRef(null);
+
   const submitForm = async ({login, password}, bag) => {
     bag.resetForm(initialValues);
     bag.setFieldValue('login', login);
@@ -29,14 +32,12 @@ export default function LoginForm() {
     const {ok, status} = await signIn("credentials", {login, password, redirect: false});
 
     if (ok) {
-      router.push("/");
+      router.push(searchParams.ref || '/');
     } else {
-      errorP.current.innerText = "Login nebo heslo nesprávné!";
-      //todo errors with status
+      errorP.current.textContent = status;
     }
   };
 
-  const router = useRouter();
   const formik = useFormik(
     {
       initialValues,
@@ -44,7 +45,6 @@ export default function LoginForm() {
       onSubmit: submitForm,
     }
   );
-  const errorP = useRef(null);
 
   return (
     <>

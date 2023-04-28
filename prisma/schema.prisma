@@ -1,10 +1,18 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model alergen {
+  alergenID Int    @id @default(autoincrement())
+  number    String @unique(map: "number") @db.VarChar(30)
+  name      String @db.VarChar(50)
+  food      food[]
 }
 
 model camp {
@@ -14,13 +22,10 @@ model camp {
   name         String         @db.VarChar(50)
   price        Int
   campID       Int            @id @default(autoincrement()) @db.UnsignedInt
-  directoryID  Int?           @db.UnsignedInt
   menu         menu[]
   program      program[]
   registration registration[]
   worker       worker[]
-
-  @@index([directoryID], map: "directoryID")
 }
 
 model food {
@@ -28,7 +33,7 @@ model food {
   description String? @db.VarChar(750)
   name        String  @db.VarChar(75)
   type        Int     @db.TinyInt
-  foodID      Int     @id @default(autoincrement()) @db.UnsignedInt
+  foodID      Int     @id @default(autoincrement())
   menuID      Int     @db.UnsignedInt
   alergen     alergen @relation(fields: [alergenID], references: [alergenID], onDelete: NoAction, onUpdate: NoAction, map: "food_ibfk_1")
   menu        menu    @relation(fields: [menuID], references: [menuID], onDelete: NoAction, onUpdate: NoAction, map: "food_ibfk_2")
@@ -55,10 +60,32 @@ model legal_representative {
   phone_number           BigInt
   pin                    BigInt
   legal_representativeID Int      @id @default(autoincrement()) @db.UnsignedInt
-  directoryID            Int?     @db.UnsignedInt
   user                   user[]
+}
 
-  @@index([directoryID], map: "FK_Legal_representative_Directory")
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model login {
+  email    String   @db.VarChar(50)
+  role     Int      @db.TinyInt
+  name     String   @unique(map: "login") @db.VarChar(30)
+  password String   @db.VarChar(60)
+  loginID  Int      @id @default(autoincrement()) @db.UnsignedInt
+  user     user[]
+  worker   worker[]
+}
+
+model logs_login_reg {
+  id      Int      @id @default(autoincrement()) @db.UnsignedInt
+  loginID Int
+  action  String   @db.VarChar(50)
+  date    DateTime @db.DateTime(0)
+}
+
+model logs_registration {
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  registrationID Int
+  action         String   @db.VarChar(50)
+  date           DateTime @db.DateTime(0)
 }
 
 model menu {
@@ -105,6 +132,26 @@ model registration {
   @@index([userID], map: "userID")
 }
 
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user {
+  birthdate              DateTime              @db.Date
+  first_name             String                @db.VarChar(30)
+  last_name              String                @db.VarChar(30)
+  phone_number           BigInt
+  pin                    BigInt
+  userID                 Int                   @id @default(autoincrement()) @db.UnsignedInt
+  directoryID            Int?                  @db.UnsignedInt
+  legal_representativeID Int?                  @db.UnsignedInt
+  loginID                Int?                  @db.UnsignedInt
+  registration           registration[]
+  legal_representative   legal_representative? @relation(fields: [legal_representativeID], references: [legal_representativeID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Legal_representative")
+  login                  login?                @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Login")
+
+  @@index([directoryID], map: "FK_User_Directory")
+  @@index([legal_representativeID], map: "FK_User_Legal_representative")
+  @@index([loginID], map: "FK_User_Login")
+}
+
 model worker {
   email        String? @db.VarChar(50)
   first_name   String? @db.VarChar(35)
@@ -127,39 +174,51 @@ model worker {
   @@index([profileID], map: "FK_Worker_Profile")
 }
 
-model login {
-  email         String   @db.VarChar(50)
-  function_type Int      @db.TinyInt
-  login         String   @unique(map: "login") @db.VarChar(30)
-  password      String   @db.VarChar(60)
-  loginID       Int      @id @default(autoincrement()) @db.UnsignedInt
-  user          user[]
-  worker        worker[]
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+view view_menu_food_alergen {
+  id           String   @default("") @db.VarChar(36)
+  number       String   @db.VarChar(30)
+  alergen_name String   @db.VarChar(50)
+  description  String?  @db.VarChar(750)
+  food_name    String   @db.VarChar(75)
+  type         Int      @db.TinyInt
+  time         DateTime @db.DateTime(0)
+  food_ID      Int      @default(0)
+
+  @@ignore
 }
 
-model alergen {
-  alergenID Int    @id @default(autoincrement())
-  number    Int    @unique(map: "number")
-  name      String @db.VarChar(50)
-  food      food[]
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+/// This view or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+view view_user_represantative {
+  id               String?  @db.VarChar(36)
+  first_name       String   @db.VarChar(30)
+  last_name        String   @db.VarChar(30)
+  birthdate        DateTime @db.Date
+  pin              BigInt
+  phone_number     BigInt
+  userID           Int      @default(0) @db.UnsignedInt
+  rep_first_name   String   @db.VarChar(30)
+  rep_last_name    String   @db.VarChar(30)
+  rep_birthdate    DateTime @db.Date
+  rep_pin          BigInt
+  rep_email        String   @db.VarChar(50)
+  rep_phone_number BigInt
+
+  @@ignore
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model user {
-  birthdate              DateTime              @db.Date
-  first_name             String                @db.VarChar(30)
-  last_name              String                @db.VarChar(30)
-  phone_number           BigInt
-  pin                    BigInt
-  userID                 Int                   @id @default(autoincrement()) @db.UnsignedInt
-  directoryID            Int?                  @db.UnsignedInt
-  legal_representativeID Int?                  @db.UnsignedInt
-  loginID                Int?                  @db.UnsignedInt
-  registration           registration[]
-  legal_representative   legal_representative? @relation(fields: [legal_representativeID], references: [legal_representativeID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Legal_representative")
-  login                  login?                @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Login")
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+view view_worker_job {
+  id           String? @db.VarChar(36)
+  last_name    String? @db.VarChar(35)
+  first_name   String? @db.VarChar(35)
+  type         Int     @db.TinyInt
+  description  String? @db.VarChar(250)
+  email        String? @db.VarChar(50)
+  phone_number BigInt?
+  title        String? @db.VarChar(20)
+  workerID     Int     @default(0) @db.UnsignedInt
 
-  @@index([directoryID], map: "FK_User_Directory")
-  @@index([legal_representativeID], map: "FK_User_Legal_representative")
-  @@index([loginID], map: "FK_User_Login")
+  @@ignore
 }

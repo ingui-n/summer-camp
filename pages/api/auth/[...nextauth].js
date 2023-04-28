@@ -9,54 +9,47 @@ export const authOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        login: {label: "Login"},
-        username: {label: "Login"},//todo name = undefined
+        login: {label: "Login", type: "text"},
         password: {label: "Password", type: "password"},
       },
       async authorize(credentials) {
-        const {login, password} = credentials;
+        const {login: name, password} = credentials;
 
-        if (!login || !password) {
+        if (!name || !password) {
           throw new Error("Missing username or password");
         }
 
-        const user = await prisma.login.findUnique({where: {login}});
+        const user = await prisma.login.findUnique({where: {name}});
 
         if (!user || !(await compare(password, user.password))) {
           throw new Error("Invalid username or password");
         }
-        // console.log(user)
+
         return user;
       }
     })
   ],
   callbacks: {
     async jwt({token, user}) {
-      // console.log(user);
       if (user) {
-        /*
-         * For adding custom parameters to user in session, we first need to add those parameters
-         * in token which then will be available in the `session()` callback
-         */
-        token.role = user.role
-        token.fullName = user.fullName
+        token.role = user.role;
+        token.id = user.loginID;
       }
 
-      return token
+      return token;
     },
     async session({session, token}) {
-      // console.log(token);//todo
       if (session.user) {
-        // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
-        session.user.role = token.role
-        session.user.fullName = token.fullName
+        session.user.role = token.role;
+        session.user.id = token.id;
       }
 
-      return session
+      return session;
     }
   },
   pages: {
     signIn: "/login",
+    signOut: '/sign-out'
   },
   session: {strategy: "jwt"},
   adapter: PrismaAdapter(prisma)

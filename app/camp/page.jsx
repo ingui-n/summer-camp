@@ -1,4 +1,4 @@
-import Camp from "@/app/camp/camp";
+import Camp from "@/app/camp/Camp";
 import prisma from "@/lib/prisma";
 import {reparseJson} from "@/lib/base";
 
@@ -14,6 +14,6 @@ export default async function Page() {
 }
 
 const getCampData = async () => {
-  const camp = await prisma.camp.findUnique({where: {campID: 1}});
+  const camp = await prisma.camp.findUnique({where: {campID: 2}});
   return reparseJson(camp);
 };

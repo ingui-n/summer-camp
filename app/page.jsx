@@ -1,8 +1,5 @@
-import SignOut from "@/components/sign-out";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
-import {getServerSession} from "next-auth/next";
-import Header from "@/components/header";
-import HomeSection from "@/components/homeSection";
+import Header from "@/components/Header";
+import HomeSection from "@/app/HomeSection";
 
 export const metadata = {
   title: 'Super tábor',
@@ -10,9 +7,6 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
-
-
   return (
     <>
       <Header/>
@@ -20,9 +14,3 @@ export default async function Home() {
     </>
   );
 };
-
-async function getData() {
-  //todo remove fetch data
-
-  return {data: 'fsd'};
-}

@@ -1,11 +1,10 @@
-'use client';
-import LoginForm from "@/components/loginForm";
+import LoginForm from "@/app/login/LoginForm";
 
-export default function LoginPage() {
+export default function LoginPage({searchParams}) {
   return (
     <>
       <h2>Login form</h2>
-      <LoginForm/>
+      <LoginForm searchParams={searchParams}/>
     </>
   );
 }

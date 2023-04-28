@@ -12,6 +12,13 @@ const foodType = {
   3: 'Večeře'
 };
 
+const getFormattedDates = (from, to) => {
+  const dateFrom = new Date(from);
+  const dateTo = new Date(to);
+
+  return `${dateFrom.getUTCDate()}. ${dateFrom.getUTCMonth() + 1}. ${dateFrom.getUTCHours()}:${dateFrom.getUTCMinutes()} - ${dateTo.getUTCHours()}:${dateTo.getUTCMinutes()}`;
+};
+
 export default function Detail({campData, programData, menuData}) {
   const [description, setDescription] = useState({
     name: '',
@@ -80,17 +87,33 @@ export default function Detail({campData, programData, menuData}) {
             {menuData && menuData.map((food, index) => (
               <tr key={index}>
                 <td>{foodType[food.type]}</td>
-                <td>{food.name}</td>
+                <td>{food.food_name}</td>
                 <td>{food.description}</td>
-                <td>{food.alergen.number} - {food.alergen.name}</td>
+                <td>{food.number} - {food.alergen_name}</td>
               </tr>
             ))}
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h1>PROGRAM</h1>
+          <table>
+            <thead>
             <tr>
-              <td>snídaně</td>
-              <td>vajíčka</td>
-              <td>Podavají se s obloženým chlebem, šunkou, sýrem a zeleninou. K dispozici je také teplý čaj.</td>
-              <td>69</td>
+              <th>Od - Do</th>
+              <th>Název</th>
+              <th>Popis</th>
             </tr>
+            </thead>
+            <tbody>
+            {programData && programData.map((program, index) => (
+              <tr key={index}>
+                <td>{getFormattedDates(program.from, program.to)}</td>
+                <td>{program.name}</td>
+                <td>{program.description}</td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </section>

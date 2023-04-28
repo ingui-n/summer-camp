@@ -1,9 +1,18 @@
 import prisma from "@/lib/prisma";
-import Detail from "@/app/detail/detail";
+import Detail from "@/app/detail/Detail";
 import {reparseJson} from "@/lib/base";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import {redirect} from "next/navigation";
 
 
 export default async function Page() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/login?ref=/detail');
+  }
+
   const campData = await getCampData();
   const programData = await getProgramData();
   const menuData = await getMenuData();
@@ -20,17 +29,20 @@ export default async function Page() {
 }
 
 const getCampData = async () => {
-  const camp = await prisma.camp.findUnique({where: {campID: 1}});
+  const camp = await prisma.camp.findUnique({where: {campID: 2}});
   return reparseJson(camp);
 };
 
 const getProgramData = async () => {
-  const program = await prisma.program.findMany({where: {campID: 1}});
+  const program = await prisma.program.findMany({where: {campID: 2}});
   return reparseJson(program);
 };
 
 const getMenuData = async () => {
-  const menu = await prisma.menu.findFirst({where: {campID: 1}});
+  const menu = await prisma.$queryRaw`SELECT * FROM view_menu_food_alergen`;
+
+  /** showcase */
+  /*const menu = await prisma.menu.findFirst({where: {campID: 2}});
 
   if (menu) {
     let foods = await prisma.food.findMany({where: {menuID: menu.menuID}});
@@ -40,8 +52,8 @@ const getMenuData = async () => {
     }
 
     return reparseJson(foods);
-  }
+  }*/
 
-  return null;
+  return reparseJson(menu);
 };
 

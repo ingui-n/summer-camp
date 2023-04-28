@@ -1,9 +1,3 @@
-/* Set background gradient */
-body {
-    background: linear-gradient(to bottom, rgb(16, 3, 41), rgb(64, 4, 4));
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
 .login-register {
     display: flex;
     flex-direction: row;
@@ -19,6 +13,7 @@ body {
 
 /* Center the card */
 .card-wrapper {
+    background: linear-gradient(to bottom, rgb(16, 3, 41), rgb(64, 4, 4));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,13 +22,16 @@ body {
 
 /* Style the card */
 .card {
-    background-color: rgba(255, 255, 255, 0.45);
+    background-color: rgb(195, 181, 182);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     padding: 50px;
     border-radius: 10px;
     max-width: 700px;
     width: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 /* Style the buttons */

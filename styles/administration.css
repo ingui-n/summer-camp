@@ -70,6 +70,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 10px;
 }
 
 .admin-body .btn {
@@ -95,6 +96,10 @@
 
 .admin-body .btn-logout:hover {
     background-color: #d32f2f;
+}
+
+.action-button {
+    text-align: center;
 }
 
 @media screen and (max-width: 968px) {

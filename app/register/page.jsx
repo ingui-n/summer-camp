@@ -1,10 +1,9 @@
-'use client';
-import RegisterForm from "@/components/registerForm";
+import RegisterForm from "@/app/register/RegisterForm";
 
-export default function RegisterPage() {
+export default function RegisterPage({searchParams}) {
   return (
     <>
-      <RegisterForm/>
+      <RegisterForm searchParams={searchParams}/>
     </>
   );
 }

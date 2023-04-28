@@ -1,11 +1,11 @@
-.card-under {
+.camp-card-under {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-.card {
+.camp-card {
     background-color: rgba(255, 255, 255, 0.984);
     border-radius: 10px;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
@@ -26,15 +26,15 @@
     transition: 200ms all;
 }
 
-.card:hover {
+.camp-card:hover {
     transform: scale(1.05);
 }
 
-.card:hover::after {
+.camp-card:hover::after {
     transform: scale(1);
 }
 
-.card-footer {
+.camp-card-footer {
     bottom: 15px;
     right: 15px;
     font-size: 0.8em;
@@ -48,22 +48,20 @@
     transition: 200ms all;
 }
 
-.card-footer:hover {
+.camp-card-footer:hover {
     transform: scale(1.05);
     cursor: pointer;
 }
 
-.card-container {
+.camp-card-container {
     top: 6vh;
     background-image: url(/about-image1.jpg);
-    width: 100vw;
-    height: 94vh;
     background-repeat: no-repeat;
     background-position: center center;
     backdrop-filter: blur(50px);
     -webkit-backdrop-filter: blur(50px);
 }
 
-.card-header {
+.camp-card-header {
     font-size: 2rem;
 }
