@@ -32,7 +32,7 @@ export default function Header() {
             && <li><Link href='/administration'>ADMINISTRACE</Link></li>
           }
           {session.status === 'unauthenticated'
-            ? <li><Link href='/login'>PŘIHLÁSÍT SE</Link></li>
+            ? <li><Link href='/sign-in'>PŘIHLÁSÍT SE</Link></li>
             : <li><Link href='/sign-out'>ODHLÁSIT SE</Link></li>
           }
         </ul>

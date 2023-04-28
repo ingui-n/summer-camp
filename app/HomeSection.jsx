@@ -14,7 +14,7 @@ export default function HomeSection() {
         <h1 className='home-title'>Přihlaš se ještě dnes.</h1>
         <div className="flex-parent">
           {session.status === 'unauthenticated' &&
-            <Link href='/login'>
+            <Link href='/sign-in'>
               <ButtonUnstyled className="black main-btn">PŘIHLÁSIT SE</ButtonUnstyled>
             </Link>
           }

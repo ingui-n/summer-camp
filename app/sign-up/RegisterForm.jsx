@@ -106,7 +106,7 @@ export default function RegisterForm({searchParams}) {
         <div className="buttons">
           <div className='login-register'>
             <p>Již jste se zaregistrovali?</p>
-            <Link href='/login'>
+            <Link href='/sign-in'>
               <Button variant="outlined">Přihlásit se</Button>
             </Link>
           </div>

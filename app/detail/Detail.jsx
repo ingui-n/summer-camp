@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {Button} from "@mui/material";
+import moment from "moment";
 
 const foodType = {
   0: 'Snídaně',
@@ -13,10 +14,10 @@ const foodType = {
 };
 
 const getFormattedDates = (from, to) => {
-  const dateFrom = new Date(from);
-  const dateTo = new Date(to);
+  const dateFrom = moment(from).format('DD.MM.\xa0HH:mm');
+  const dateTo = moment(to).format('\xa0-\xa0HH:mm');
 
-  return `${dateFrom.getUTCDate()}. ${dateFrom.getUTCMonth() + 1}. ${dateFrom.getUTCHours()}:${dateFrom.getUTCMinutes()} - ${dateTo.getUTCHours()}:${dateTo.getUTCMinutes()}`;
+  return dateFrom + dateTo;
 };
 
 export default function Detail({campData, programData, menuData}) {

@@ -1,4 +1,4 @@
-import LoginForm from "@/app/login/LoginForm";
+import LoginForm from "@/app/sign-in/LoginForm";
 
 export default function LoginPage({searchParams}) {
   return (

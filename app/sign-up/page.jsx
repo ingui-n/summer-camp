@@ -1,4 +1,4 @@
-import RegisterForm from "@/app/register/RegisterForm";
+import RegisterForm from "@/app/sign-up/RegisterForm";
 
 export default function RegisterPage({searchParams}) {
   return (

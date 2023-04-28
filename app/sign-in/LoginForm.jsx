@@ -77,7 +77,7 @@ export default function LoginForm({searchParams}) {
         <div className="buttons">
           <div className='login-register'>
             <p>Nemáte účet?</p>
-            <Link href='/register'>
+            <Link href='/sign-up'>
               <Button variant="outlined">Registrovat se</Button>
             </Link>
           </div>
