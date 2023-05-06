@@ -39,8 +39,8 @@ const getProgramData = async () => {
 };
 
 const getMenuData = async () => {
-  // const menu = await prisma.view_menu_food_alergen.findMany();//todo
-  const menu = await prisma.$queryRaw`SELECT * FROM view_menu_food_alergen`;
+  const menu = await prisma.view_menu_food_alergen.findMany({where: {campID: 2}});
+
   /** showcase */
   /*const menu = await prisma.menu.findFirst({where: {campID: 2}});
 

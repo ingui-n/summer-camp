@@ -9,20 +9,20 @@ export const authOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        login: {label: "Login", type: "text"},
+        name: {label: "Login", type: "text"},
         password: {label: "Password", type: "password"},
       },
       async authorize(credentials) {
-        const {login: name, password} = credentials;
+        const {name, password} = credentials;
 
         if (!name || !password) {
-          throw new Error("Missing username or password");
+          throw new Error("Login nebo heslo je prázdné");
         }
 
         const user = await prisma.login.findUnique({where: {name}});
 
         if (!user || !(await compare(password, user.password))) {
-          throw new Error("Invalid username or password");
+          throw new Error("Špatný login nebo email");
         }
 
         return user;

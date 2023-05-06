@@ -20,6 +20,6 @@ export default async function Page({params}) {
 const getFood = async (id) => {
   const menu = await prisma.$queryRaw`SELECT *
                                       FROM view_menu_food_alergen
-                                      WHERE food_ID = ${id}`;
+                                      WHERE food_ID = ${id}`;//todo
   return menu && menu.length > 0 ? reparseJson(menu[0]) : null;
 };

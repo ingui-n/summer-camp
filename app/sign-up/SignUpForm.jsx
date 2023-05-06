@@ -34,12 +34,12 @@ export default function SignUpForm({searchParams, createUser}) {
       return;
     }
 
-    const {ok: loggedIn, status} = await signInCredentials(name, password);
+    const {error} = await signInCredentials(name, password);
 
-    if (loggedIn) {
+    if (!error) {
       router.push(searchParams.ref || '/');
     } else {
-      errorP.current.textContent = status;
+      errorP.current.textContent = error;
     }
   };
 
@@ -105,7 +105,7 @@ export default function SignUpForm({searchParams, createUser}) {
               <Button variant="outlined">Přihlásit se</Button>
             </Link>
           </div>
-          <Button type='submit' variant="contained">Register</Button>
+          <Button type='submit' variant="contained">Registrovat se</Button>
         </div>
       </form>
     </>

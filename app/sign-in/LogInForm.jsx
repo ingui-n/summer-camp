@@ -25,12 +25,12 @@ export default function LogInForm({searchParams}) {
     bag.resetForm(initialValues);
     bag.setFieldValue('name', name);
 
-    const {ok, status} = await signInCredentials(name, password);
+    const {error} = await signInCredentials(name, password);
 
-    if (ok) {
+    if (!error) {
       router.push(searchParams.ref || '/');
     } else {
-      errorP.current.textContent = status;
+      errorP.current.textContent = error;
     }
   };
 

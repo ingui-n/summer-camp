@@ -21,7 +21,7 @@ model camp {
   description  String?        @db.VarChar(4000)
   name         String         @db.VarChar(50)
   price        Int
-  campID       Int            @id @default(autoincrement()) @db.UnsignedInt
+  campID       Int            @id @default(autoincrement())
   menu         menu[]
   program      program[]
   registration registration[]
@@ -91,9 +91,9 @@ model logs_registration {
 model menu {
   time   DateTime @db.DateTime(0)
   menuID Int      @id @default(autoincrement()) @db.UnsignedInt
-  campID Int      @db.UnsignedInt
+  campID Int
   food   food[]
-  camp   camp     @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Menu_Camp")
+  camp   camp     @relation(fields: [campID], references: [campID], onUpdate: Restrict, map: "FK_Menu_Camp")
 
   @@index([campID], map: "FK_Menu_Camp")
 }
@@ -113,8 +113,8 @@ model program {
   name        String   @db.VarChar(60)
   to          DateTime @db.DateTime(0)
   programID   Int      @id @default(autoincrement()) @db.UnsignedInt
-  campID      Int      @db.UnsignedInt
-  camp        camp     @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Program_Camp")
+  campID      Int
+  camp        camp     @relation(fields: [campID], references: [campID], onUpdate: Restrict, map: "FK_Program_Camp")
 
   @@index([campID], map: "FK_Program_Camp")
 }
@@ -123,10 +123,10 @@ model registration {
   date           DateTime @db.DateTime(0)
   is_paid        Boolean
   registrationID Int      @id @default(autoincrement()) @db.UnsignedInt
-  userID         Int      @db.UnsignedInt
-  campID         Int      @db.UnsignedInt
-  camp           camp     @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_registration_camp")
-  user           user     @relation(fields: [userID], references: [userID], onDelete: NoAction, onUpdate: NoAction, map: "FK_registration_user")
+  userID         Int
+  campID         Int
+  user           user     @relation(fields: [userID], references: [userID], onUpdate: Restrict, map: "FK_registration_user")
+  camp           camp     @relation(fields: [campID], references: [campID], onUpdate: Restrict, map: "FK_registration_camp")
 
   @@index([campID], map: "FK_registration_camp")
   @@index([userID], map: "userID")
@@ -139,7 +139,7 @@ model user {
   last_name              String                @db.VarChar(30)
   phone_number           BigInt
   pin                    BigInt
-  userID                 Int                   @id @default(autoincrement()) @db.UnsignedInt
+  userID                 Int                   @id @default(autoincrement())
   directoryID            Int?                  @db.UnsignedInt
   legal_representativeID Int?                  @db.UnsignedInt
   loginID                Int?                  @db.UnsignedInt
@@ -158,15 +158,15 @@ model worker {
   last_name    String? @db.VarChar(35)
   phone_number BigInt?
   title        String? @db.VarChar(20)
-  workerID     Int     @id @default(autoincrement()) @db.UnsignedInt
-  campID       Int     @db.UnsignedInt
+  workerID     Int     @id @unique(map: "workerID") @default(autoincrement())
+  campID       Int
   jobID        Int     @db.UnsignedInt
   loginID      Int?    @db.UnsignedInt
   profileID    Int     @db.UnsignedInt
-  camp         camp    @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Camp")
   job          job     @relation(fields: [jobID], references: [jobID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Job")
   login        login?  @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Login")
   profile      profile @relation(fields: [profileID], references: [profileID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Profile")
+  camp         camp    @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Camp")
 
   @@index([campID], map: "FK_Worker_Camp")
   @@index([jobID], map: "FK_Worker_Job")
@@ -174,22 +174,18 @@ model worker {
   @@index([profileID], map: "FK_Worker_Profile")
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 view view_menu_food_alergen {
-  id           String   @default("") @db.VarChar(36)
+  id           String?  @db.VarChar(36)
   number       String   @db.VarChar(30)
   alergen_name String   @db.VarChar(50)
   description  String?  @db.VarChar(750)
   food_name    String   @db.VarChar(75)
   type         Int      @db.TinyInt
   time         DateTime @db.DateTime(0)
-  food_ID      Int      @default(0)
-
-  @@ignore
+  food_ID      Int      @unique @default(0)
+  campID       Int      @default(0)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-/// This view or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 view view_user_represantative {
   id               String?  @db.VarChar(36)
   first_name       String   @db.VarChar(30)
@@ -197,18 +193,16 @@ view view_user_represantative {
   birthdate        DateTime @db.Date
   pin              BigInt
   phone_number     BigInt
-  userID           Int      @default(0) @db.UnsignedInt
+  userID           Int      @unique @default(0)
   rep_first_name   String   @db.VarChar(30)
   rep_last_name    String   @db.VarChar(30)
   rep_birthdate    DateTime @db.Date
   rep_pin          BigInt
   rep_email        String   @db.VarChar(50)
   rep_phone_number BigInt
-
-  @@ignore
+  campID           Int      @default(0)
 }
 
-/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 view view_worker_job {
   id           String? @db.VarChar(36)
   last_name    String? @db.VarChar(35)
@@ -218,7 +212,6 @@ view view_worker_job {
   email        String? @db.VarChar(50)
   phone_number BigInt?
   title        String? @db.VarChar(20)
-  workerID     Int     @default(0) @db.UnsignedInt
-
-  @@ignore
+  workerID     Int     @unique @default(0)
+  campID       Int     @default(0)
 }

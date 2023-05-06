@@ -18,9 +18,6 @@ export default function Header() {
     return data?.user.role === 0;
   }
 
-  if (status === 'loading')
-    return '';
-
   return (
     <header>
       <nav>
@@ -36,7 +33,7 @@ export default function Header() {
           }
           {status === 'unauthenticated'
             ? <li><Link href='/sign-in'>PŘIHLÁSÍT SE</Link></li>
-            : <li><Link href='/sign-out'>[{data.user.name}] ODHLÁSIT SE</Link></li>
+            : <li><Link href='/sign-out'>[{data?.user.name}] ODHLÁSIT SE</Link></li>
           }
         </ul>
 

@@ -8,6 +8,7 @@ import moment from 'moment';
 import 'moment/locale/cs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {SnackbarProvider} from "notistack";
 
 const theme = createTheme({}, csCZ, coreCsCZ);
 
@@ -18,7 +19,9 @@ export default function RootProviders({children}) {
     <SessionProvider refetchOnWindowFocus={false}>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale='cs'>
-          {children}
+          <SnackbarProvider maxSnack={4}>
+            {children}
+          </SnackbarProvider>
         </LocalizationProvider>
       </ThemeProvider>
     </SessionProvider>
