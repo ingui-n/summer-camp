@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 import Link from "next/link";
-import ButtonUnstyled from "@mui/base/ButtonUnstyled";
+import Button from "@mui/base/Button";
 
 export default function Camp({campData}) {
   const [description, setDescription] = useState({
@@ -22,7 +22,7 @@ export default function Camp({campData}) {
             <h6 className='camp-card-header'><strong>{description.name}</strong></h6>
             <span>{description.mainDescription}</span>
             <Link href='/detail'>
-              <ButtonUnstyled className="camp-card-footer">PODROBNOSTI</ButtonUnstyled>
+              <Button className="camp-card-footer">PODROBNOSTI</Button>
             </Link>
           </div>
         </div>

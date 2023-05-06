@@ -1,35 +1,31 @@
 'use client';
 
-import {Button, TextField} from "@mui/material";
+import {Button, InputAdornment, TextField} from "@mui/material";
 import {useFormik} from "formik";
-import * as Yup from "yup";
-import {signIn} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import {useRef} from "react";
+import {useRef, useState} from "react";
 import Link from "next/link";
+import {signInCredentials} from "@/lib/base";
+import {logInvalidationSchema} from "@/lib/validationSchemas";
+import IconButton from "@mui/material/IconButton";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 const initialValues = {
-  login: "",
+  name: "",
   password: ""
 };
 
-const validationSchema = Yup.object().shape({
-  login: Yup.string()
-    .required("Required"),
-  password: Yup.string()
-    .required("Required")
-});
 
-
-export default function LoginForm({searchParams}) {
+export default function LogInForm({searchParams}) {
   const router = useRouter();
   const errorP = useRef(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const submitForm = async ({login, password}, bag) => {
+  const submitForm = async ({name, password}, bag) => {
     bag.resetForm(initialValues);
-    bag.setFieldValue('login', login);
+    bag.setFieldValue('name', name);
 
-    const {ok, status} = await signIn("credentials", {login, password, redirect: false});
+    const {ok, status} = await signInCredentials(name, password);
 
     if (ok) {
       router.push(searchParams.ref || '/');
@@ -41,7 +37,7 @@ export default function LoginForm({searchParams}) {
   const formik = useFormik(
     {
       initialValues,
-      validationSchema,
+      validationSchema: logInvalidationSchema,
       onSubmit: submitForm,
     }
   );
@@ -51,26 +47,38 @@ export default function LoginForm({searchParams}) {
       <div className="message">
         <h2>Přihlášení</h2>
       </div>
-      <p>Prosím vložte svůj email a heslo!</p>
+      <p>Vyplňte prosím následující:</p>
       <form onSubmit={formik.handleSubmit}>
         <div className="content">
           <TextField
-            name="login"
+            name="name"
             type='text'
             label='Login'
-            value={formik.values.login}
+            value={formik.values.name}
             onChange={formik.handleChange}
-            error={formik.touched.login && Boolean(formik.errors.login)}
-            helperText={formik.touched.login && formik.errors.login}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
           />
           <TextField
-            name="password"
-            type='password'
-            label='Password'
+            type={showPassword ? 'text' : 'password'}
+            label="Heslo"
+            name='password'
             value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </div>
         <p className='message-error' ref={errorP}></p>

@@ -70,7 +70,7 @@ export default function Detail({campData, programData, menuData}) {
 
         <section className='detail-links'>
           <Link href='/camp'><Button variant="outlined">TÁBORY</Button></Link>
-          <Link href='/camp-form'><Button variant="contained">PŘIHLÁSIT SE</Button></Link>
+          <Link href='/register'><Button variant="contained">PŘIHLÁSIT SE</Button></Link>
         </section>
 
         <section>

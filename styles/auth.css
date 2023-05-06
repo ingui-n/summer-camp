@@ -75,6 +75,13 @@
 
 .message-error {
     color: red;
+    padding-top: 12px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 /* Small screens */

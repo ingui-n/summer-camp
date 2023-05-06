@@ -5,7 +5,7 @@ import {useRef} from "react";
 import {useSession} from "next-auth/react";
 
 export default function Header() {
-  const session = useSession();
+  const {status, data} = useSession();
   const burgerRef = useRef(null);
   const navLinksRef = useRef(null);
 
@@ -15,8 +15,11 @@ export default function Header() {
   };
 
   const isUserAdmin = () => {
-    return session.data && session.data.user.role === 0;
+    return data?.user.role === 0;
   }
+
+  if (status === 'loading')
+    return '';
 
   return (
     <header>
@@ -31,9 +34,9 @@ export default function Header() {
           {isUserAdmin()
             && <li><Link href='/administration'>ADMINISTRACE</Link></li>
           }
-          {session.status === 'unauthenticated'
+          {status === 'unauthenticated'
             ? <li><Link href='/sign-in'>PŘIHLÁSÍT SE</Link></li>
-            : <li><Link href='/sign-out'>ODHLÁSIT SE</Link></li>
+            : <li><Link href='/sign-out'>[{data.user.name}] ODHLÁSIT SE</Link></li>
           }
         </ul>
 

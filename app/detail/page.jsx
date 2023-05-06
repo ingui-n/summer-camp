@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import Detail from "@/app/detail/Detail";
 import {reparseJson} from "@/lib/base";
 import {getServerSession} from "next-auth/next";
-import {authOptions} from "@/pages/api/auth/[...nextauth]";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {redirect} from "next/navigation";
 
 
@@ -39,8 +39,8 @@ const getProgramData = async () => {
 };
 
 const getMenuData = async () => {
+  // const menu = await prisma.view_menu_food_alergen.findMany();//todo
   const menu = await prisma.$queryRaw`SELECT * FROM view_menu_food_alergen`;
-
   /** showcase */
   /*const menu = await prisma.menu.findFirst({where: {campID: 2}});
 

@@ -1,4 +1,4 @@
-import '@/styles/globals.css';
+import '@/styles/global.css';
 import {Roboto} from "next/font/google";
 import RootProviders from "@/components/RootProviders";
 

@@ -1,10 +1,10 @@
-import LoginForm from "@/app/sign-in/LoginForm";
+import LogInForm from "@/app/sign-in/LogInForm";
 
 export default function LoginPage({searchParams}) {
+
   return (
     <>
-      <h2>Login form</h2>
-      <LoginForm searchParams={searchParams}/>
+      <LogInForm searchParams={searchParams}/>
     </>
   );
 }

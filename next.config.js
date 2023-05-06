@@ -1,12 +1,12 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    appDir: true,
+    serverActions: true,
     serverComponentsExternalPackages: ["prisma", "@prisma/client"],
   },
-  compiler: {
+  /*compiler: {
     styledComponents: true
-  },
+  },*/
   modularizeImports: {
     '@mui/material': {
       transform: '@mui/material/{{member}}'
@@ -17,10 +17,13 @@ const nextConfig = {
     '@mui/base': {
       transform: '@mui/base/{{member}}'
     },
+    '@mui/x-date-pickers': {
+      transform: '@mui/x-date-pickers/{{member}}'
+    },
     '@mui/icons-material/?(((\\w*)?/?)*)': {
       transform: '@mui/icons-material/{{ matches.[1] }}/{{member}}'
     }
   }
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;

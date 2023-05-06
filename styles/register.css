@@ -1,0 +1,7 @@
+.card-wrapper {
+    background: linear-gradient(to bottom, rgb(16, 3, 41), rgb(64, 4, 4));
+    display: flex;
+    height: auto;
+    justify-content: center;
+    padding: 50px;
+}

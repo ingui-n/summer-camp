@@ -1,11 +1,26 @@
 'use client';
 
 import {SessionProvider} from "next-auth/react";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {csCZ as coreCsCZ} from '@mui/material/locale';
+import {csCZ} from '@mui/x-date-pickers/locales';
+import moment from 'moment';
+import 'moment/locale/cs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+
+const theme = createTheme({}, csCZ, coreCsCZ);
 
 export default function RootProviders({children}) {
+  moment.locale('cs');
+
   return (
     <SessionProvider refetchOnWindowFocus={false}>
-      {children}
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale='cs'>
+          {children}
+        </LocalizationProvider>
+      </ThemeProvider>
     </SessionProvider>
   );
 }
