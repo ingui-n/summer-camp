@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 import {useRef, useState} from "react";
 import Link from "next/link";
 import {signInCredentials} from "@/lib/base";
-import {logInvalidationSchema} from "@/lib/validationSchemas";
+import {logInValidationSchema} from "@/lib/validationSchemas";
 import IconButton from "@mui/material/IconButton";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 
@@ -37,7 +37,7 @@ export default function LogInForm({searchParams}) {
   const formik = useFormik(
     {
       initialValues,
-      validationSchema: logInvalidationSchema,
+      validationSchema: logInValidationSchema,
       onSubmit: submitForm,
     }
   );

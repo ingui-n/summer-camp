@@ -2,14 +2,13 @@
 
 import {Button, TextField} from "@mui/material";
 import {useFormik} from "formik";
-import * as Yup from "yup";
 import {useRouter} from "next/navigation";
-import axios from "axios";
-import {useRef} from "react";
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
-import isEmail from 'validator/lib/isEmail';
 import formatStringByPattern from 'format-string-by-pattern';
 import moment from 'moment';
+import {registerValidationSchema} from "@/lib/validationSchemas";
+import {useSnackbar} from "notistack";
+import {useSession} from "next-auth/react";
 
 const initialValues = {
   childFirstname: '',
@@ -28,50 +27,32 @@ const initialValues = {
   parentZip: '',
 };
 
-//todo add .typeError()
-const validationSchema = Yup.object().shape({
-  childFirstname: Yup.string().required('Child first name is required'),
-  childSurname: Yup.string().required('Child surname is required'),
-  childPhone: Yup.number().required('Child phone number is required'),
-  childBirthdate: Yup.string().required('Child birthdate is required'),
-  childPin: Yup.string().required('Child PIN is required'),
-  parentFirstname: Yup.string().required('Parent first name is required'),
-  parentSurname: Yup.string().required('Parent surname is required'),
-  parentEmail: Yup.string().email('Invalid email').test('validateEMail', val => isEmail(val)).required('Email is required'),
-  parentPhone: Yup.number().required('Parent phone number is required'),
-  parentBirthdate: Yup.date().required('Parent birthdate is required'),
-  parentPin: Yup.string().required('Parent PIN is required'),
-  parentCity: Yup.string().required('Parent city is required'),
-  parentStreet: Yup.string().required('Parent street is required'),
-  parentZip: Yup.string().required('Parent ZIP code is required'),
-});
 
-
-export default function RegisterForm({test}) {
+export default function RegisterForm({register}) {
+  const {enqueueSnackbar} = useSnackbar();
+  const {data: session} = useSession();
   const router = useRouter();//todo
-  const errorP = useRef(null);
 
   const submitForm = async (values) => {
-    console.log(values)
-    axios.post('/api/register', values)
-      .then((res) => {
-        console.log(res);
+    values.childBirthdate = values.childBirthdate.format();
+    values.parentBirthdate = values.parentBirthdate.format();
+    values.loginID = session.user.id;
 
-        /*if (ok) {
-          router.push(searchParams.ref || '/');
-        } else {
-          errorP.current.textContent = status;
-        }*/
-      })
-      .catch(err => {
-        errorP.current.textContent = err.response.data.error;
-      });
+    const {ok, err} = await register(values);
+
+    if (ok) {
+      enqueueSnackbar('Registrace proběhla úspěšně', {variant: 'success'});
+      router.push('/detail');
+    } else {
+      enqueueSnackbar(err, {variant: 'error'});
+    }
+
   };
 
   const formik = useFormik(
     {
       initialValues,
-      validationSchema,
+      validationSchema: registerValidationSchema,
       onSubmit: submitForm,
     }
   );
@@ -110,11 +91,11 @@ export default function RegisterForm({test}) {
           <DatePicker
             name='childBirthdate'
             label="Datum narození"
-            defaultValue={formik.values.childBirthdate}
             onChange={value => formik.setFieldValue('childBirthdate', value)}
-            value={formik.values.childBirthdate}
-            minDate={moment().year(moment().year() -5)}
-            maxDate={moment().year(moment().year() -19)}
+            defaultValue={moment(formik.values.childBirthdate)}
+            value={moment(formik.values.childBirthdate)}
+            minDate={moment().year(moment().year() -18)}
+            maxDate={moment().year(moment().year() -5)}
             slotProps={{
               textField: {
                 variant: 'outlined',
@@ -181,10 +162,11 @@ export default function RegisterForm({test}) {
           <DatePicker
             name='parentBirthdate'
             label="Datum narození"
-            defaultValue={formik.values.parentBirthdate}
             onChange={value => formik.setFieldValue('parentBirthdate', value)}
-            value={formik.values.parentBirthdate}
-            minDate={moment().year(moment().year() -15)}
+            defaultValue={moment(formik.values.parentBirthdate)}
+            value={moment(formik.values.parentBirthdate)}
+            minDate={moment().year(moment().year() -110)}
+            maxDate={moment().year(moment().year() -15)}
             slotProps={{
               textField: {
                 variant: 'outlined',
@@ -226,12 +208,11 @@ export default function RegisterForm({test}) {
             type='text'
             label='PSČ'
             value={formik.values.parentZip}
-            onChange={formik.handleChange}
+            onChange={event => formik.setFieldValue('parentZip', formatStringByPattern('000 00', event.target.value))}
             error={formik.touched.parentZip && Boolean(formik.errors.parentZip)}
             helperText={formik.touched.parentZip && formik.errors.parentZip}
           />
         </div>
-        <p className='message-error' ref={errorP}></p>
         <div className="buttons">
           <Button type='submit' variant="contained">Zaregistrovat se</Button>
         </div>

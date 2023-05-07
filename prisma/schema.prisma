@@ -181,8 +181,9 @@ view view_menu_food_alergen {
   description  String?  @db.VarChar(750)
   food_name    String   @db.VarChar(75)
   type         Int      @db.TinyInt
+  menuID       Int      @default(0) @db.UnsignedInt
   time         DateTime @db.DateTime(0)
-  food_ID      Int      @unique @default(0)
+  foodID       Int      @unique @default(0)
   campID       Int      @default(0)
 }
 

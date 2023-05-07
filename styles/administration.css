@@ -102,6 +102,23 @@
     text-align: center;
 }
 
+.config-button {
+    margin: 15px 0;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.form-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 @media screen and (max-width: 968px) {
     .admin-body .container {
         flex-direction: column;

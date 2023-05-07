@@ -7,6 +7,7 @@ import moment from 'moment';
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import {useState} from "react";
 import {useSnackbar} from 'notistack';
+import {Button} from "@mui/material";
 
 export default function FoodMenu({menuData, removeFood}) {
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -19,7 +20,7 @@ export default function FoodMenu({menuData, removeFood}) {
 
   const handleRemoveFood = async ({food}) => {
     const oldFoods = [...foods];
-    setFoods(foods => foods.filter(({food_ID}) => food_ID !== food.food_ID));
+    setFoods(foods => foods.filter(({foodID}) => foodID !== food.foodID));
     setOpenConfirm(false);
 
     const {ok} = await removeFood(food);
@@ -50,7 +51,9 @@ export default function FoodMenu({menuData, removeFood}) {
   return (
     <>
       <div className="content">
-        <button className="btn-create btn">CREATE NEW</button>
+        <Link href='/administration/food-menu/add'>
+          <Button className='config-button' variant='outlined' color='info'>Vytvořit</Button>
+        </Link>
         <table>
           <thead>
           <tr>
@@ -69,8 +72,11 @@ export default function FoodMenu({menuData, removeFood}) {
               <td>{food.description}</td>
               <td>{food.number}</td>
               <td>{getFormattedDate(food.time)}</td>
-              <td className='action-button'><IconButton aria-label="edit"><Link href={`/administration/food-menu/edit/${food.food_ID}`}><EditIcon/></Link></IconButton></td>
-              <td className='action-button'><IconButton aria-label="remove" onClick={async () => await handleOpenRemoveDialog(food)}><DeleteIcon/></IconButton></td>
+              <td className='action-button'><IconButton aria-label="edit"><Link
+                href={`/administration/food-menu/edit/${food.foodID}`}><EditIcon/></Link></IconButton></td>
+              <td className='action-button'><IconButton aria-label="remove"
+                                                        onClick={async () => await handleOpenRemoveDialog(food)}><DeleteIcon/></IconButton>
+              </td>
             </tr>
           ))}
           </tbody>
@@ -79,7 +85,7 @@ export default function FoodMenu({menuData, removeFood}) {
       <ConfirmationDialog
         open={openConfirm}
         {...dialogProps}
-        />
+      />
     </>
   );
 }

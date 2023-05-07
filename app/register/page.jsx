@@ -1,18 +1,22 @@
 import RegisterForm from "@/app/register/RegisterForm";
 
-export default function RegisterPage() {
-  const test = async () => {
-    'use server';
+const register = async values => {
+  'use server';
 
-    const menu = await prisma.menu.findFirst({where: {campID: 2}});
-    console.log(menu);
+  try {
+    await prisma.$queryRaw`CALL pr_form_camp(${values.parentBirthdate}, ${values.parentEmail}, ${values.parentFirstname}, ${values.parentSurname}, ${parseInt(values.parentPhone)}, ${values.parentPin.replace('/', '')}, ${values.parentCity}, ${values.parentStreet}, ${parseInt(values.parentZip)}, ${values.childBirthdate}, ${values.childFirstname}, ${values.childSurname}, ${parseInt(values.childPhone)}, ${values.childPin.replace('/', '')}, ${values.loginID})`;
+  } catch (err) {
+    console.log(err);
+    return {ok: false, err}
+  }
 
-    return menu;
-  };
+  return {ok: true};
+};
 
+export default async function RegisterPage() {
   return (
     <>
-      <RegisterForm test={test}/>
+      <RegisterForm register={register}/>
     </>
   );
 }

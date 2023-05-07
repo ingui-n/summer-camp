@@ -2,21 +2,21 @@ import prisma from "@/lib/prisma";
 import {reparseJson} from "@/lib/base";
 import FoodMenu from "@/app/administration/food-menu/FoodMenu";
 
+const removeFood = async food => {
+  'use server';
+
+  const res = {ok: false};
+
+  try {
+    await prisma.food.delete({where: {foodID: food.foodID}});
+    return {...res, ok: true};
+  } catch (e) {
+  }
+
+  return res;
+};
+
 export default async function Page() {
-  const removeFood = async food => {
-    'use server';
-
-    const res = {ok: false};
-
-    try {
-      await prisma.food.delete({where: {foodID: food.food_ID}});
-      return {...res, ok: true};
-    } catch (e) {
-    }
-
-    return res;
-  };
-
   const menuData = await getMenuData();
 
   return (
