@@ -28,7 +28,8 @@ export default async function Layout({children}) {
           <div className="sidebar">
             <ul>
               {/*todo add more links*/}
-              <li><Link href='/administration/food-menu'>Food Menu</Link></li>
+              <li><Link href='/administration/food-menu'>Jídla</Link></li>
+              <li><Link href='/administration/allergens'>Alergeny</Link></li>
             </ul>
           </div>
           {children}

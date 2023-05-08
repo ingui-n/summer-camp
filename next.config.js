@@ -11,6 +11,9 @@ const nextConfig = {
     '@mui/material': {
       transform: '@mui/material/{{member}}'
     },
+    '@mui/x-data-grid': {
+      transform: '@mui/x-data-grid/{{member}}'
+    },
     '@mui/lab': {
       transform: '@mui/lab/{{member}}'
     },

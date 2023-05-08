@@ -17,7 +17,7 @@ const ConfirmationDialog = ({open, onClose, onSubmit, onDeny, denyText, submitTe
       <DialogTitle>
         <Box display="flex" alignItems="center">
           <Box flexGrow={1}>
-            <Typography variant="h6">Confirmation</Typography>
+            <Typography variant="h6">Ověření</Typography>
           </Box>
           <Box>
             <IconButton onClick={onClose}>

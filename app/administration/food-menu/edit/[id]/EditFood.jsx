@@ -60,7 +60,7 @@ export default function EditFood({foodData = initialValues, allergensData, updat
   return (
     <>
       <div className='content'>
-        <h2>Úprava jídla:</h2>
+        <h2>Menu</h2>
         <form onSubmit={formik.handleSubmit}>
           <div className='content form-inputs'>
             <TextField
