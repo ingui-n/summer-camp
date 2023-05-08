@@ -31,7 +31,7 @@ const initialValues = {
 export default function RegisterForm({register}) {
   const {enqueueSnackbar} = useSnackbar();
   const {data: session} = useSession();
-  const router = useRouter();//todo
+  const router = useRouter();
 
   const submitForm = async (values) => {
     values.childBirthdate = values.childBirthdate.format();
@@ -61,13 +61,9 @@ export default function RegisterForm({register}) {
     <>
       <form className='auth-form' onSubmit={formik.handleSubmit}>
         <div className="message">
-          <h2 onClick={() => console.log(formik.values)}>Registrační formulář</h2>
+          <h2>Registrační formulář</h2>
         </div>
-        <p onClick={async () => {
-          const menu = await test();
-          console.log(menu);
-        }}
-        >Vyplňte prosím následující dotazník:</p>
+        <p>Vyplňte prosím následující dotazník:</p>
         <div className="content">
           <h3>Část o dítěti:</h3>
           <TextField

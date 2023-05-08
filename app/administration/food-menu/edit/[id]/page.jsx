@@ -9,7 +9,7 @@ const updateFood = async values => {
   const food = {
     description: values.description,
     name: values.food_name,
-    type: values.type
+    type: values.type.type
   };
 
   const menu = {
@@ -19,11 +19,11 @@ const updateFood = async values => {
   try {
     await prisma.food.update({data: food, where: {foodID: values.foodID}});
     await prisma.menu.update({data: menu, where: {menuID: values.menuID}});
-  } catch (e) {
-    return false;
+  } catch ({meta}) {
+    return {ok: false, err: meta.message};
   }
 
-  return true;
+  return {ok: true};
 };
 
 export default async function Page({params}) {

@@ -5,13 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {Button} from "@mui/material";
 import moment from "moment";
-
-const foodType = {
-  0: 'Snídaně',
-  1: 'Oběd',
-  2: 'Svačina',
-  3: 'Večeře'
-};
+import {foodTypes} from "@/lib/base";
 
 const getFormattedDates = (from, to) => {
   const dateFrom = moment(from).format('DD.MM.\xa0HH:mm');
@@ -87,7 +81,7 @@ export default function Detail({campData, programData, menuData}) {
             <tbody>
             {menuData && menuData.map((food, index) => (
               <tr key={index}>
-                <td>{foodType[food.type]}</td>
+                <td>{foodTypes.find(({type}) => type === food.type)?.label || ''}</td>
                 <td>{food.food_name}</td>
                 <td>{food.description}</td>
                 <td>{food.number} - {food.alergen_name}</td>

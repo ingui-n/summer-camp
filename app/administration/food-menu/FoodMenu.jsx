@@ -8,8 +8,9 @@ import ConfirmationDialog from "@/components/ConfirmationDialog";
 import {useState} from "react";
 import {useSnackbar} from 'notistack';
 import {Button} from "@mui/material";
+import {foodTypes} from "@/lib/base";
 
-export default function FoodMenu({menuData, removeFood}) {
+export default function FoodMenu({menuData, removeFood}) {//todo data are not updated after changes
   const [openConfirm, setOpenConfirm] = useState(false);
   const [foods, setFoods] = useState(menuData);
   const {enqueueSnackbar} = useSnackbar();
@@ -52,13 +53,14 @@ export default function FoodMenu({menuData, removeFood}) {
     <>
       <div className="content">
         <Link href='/administration/food-menu/add'>
-          <Button className='config-button' variant='outlined' color='info'>Vytvořit</Button>
+          <Button variant='outlined' color='info' className='config-button'>Vytvořit</Button>
         </Link>
         <table>
           <thead>
           <tr>
             <th>Název</th>
             <th>Popis</th>
+            <th>Typ</th>
             <th>Alergen</th>
             <th>Čas</th>
             <th>Upravit</th>
@@ -70,12 +72,23 @@ export default function FoodMenu({menuData, removeFood}) {
             <tr key={index}>
               <td>{food.food_name}</td>
               <td>{food.description}</td>
+              <td>{foodTypes.find(({type}) => type === food.type)?.label || ''}</td>
               <td>{food.number}</td>
               <td>{getFormattedDate(food.time)}</td>
-              <td className='action-button'><IconButton aria-label="edit"><Link
-                href={`/administration/food-menu/edit/${food.foodID}`}><EditIcon/></Link></IconButton></td>
-              <td className='action-button'><IconButton aria-label="remove"
-                                                        onClick={async () => await handleOpenRemoveDialog(food)}><DeleteIcon/></IconButton>
+              <td className='action-button'>
+                <IconButton aria-label="edit">
+                  <Link href={`/administration/food-menu/edit/${food.foodID}`}>
+                    <EditIcon/>
+                  </Link>
+                </IconButton>
+              </td>
+              <td className='action-button'>
+                <IconButton
+                  aria-label="remove"
+                  onClick={async () => await handleOpenRemoveDialog(food)}
+                >
+                  <DeleteIcon/>
+                </IconButton>
               </td>
             </tr>
           ))}

@@ -8,27 +8,44 @@ import moment from "moment";
 import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";
 import {isEqual} from "lodash";
 import {useSnackbar} from "notistack";
+import {useRouter} from "next/navigation";
+import {foodTypes} from "@/lib/base";
 
 const initialValues = {
   food_name: "",
   description: "",
   time: '',
-  allergen: {}
+  allergen: {label: '', name: '', number: '', alergenID: 0},
+  type: 0
 };
 
-export default function EditFood({foodData = initialValues, allergensData, updateFood}) {
+
+export default function EditFood({foodData = initialValues, allergensData, updateFood, addFood}) {
   const {enqueueSnackbar} = useSnackbar();
+  const router = useRouter();
   foodData.time = moment(foodData.time);
+
+  if (typeof foodData.type === 'number') {
+    foodData.type = foodTypes.find(({type}) => type === foodData.type) || {label: '', type: 0};
+  }
 
   const submitForm = async (values) => {
     values.time = values.time.format();
 
-    const res = await updateFood(values);
+    let res;
 
-    if (res) {
-      enqueueSnackbar('Položka uložena', {variant: 'success'});
+    if (addFood instanceof Function) {
+      res = await addFood(values);
     } else {
-      enqueueSnackbar('Nelze uložit', {variant: 'error'});
+      res = await updateFood(values);
+    }
+
+    if (res.ok) {
+      enqueueSnackbar('Položka uložena', {variant: 'success'});
+      if (addFood instanceof Function)
+        router.push('/administration/food-menu');
+    } else {
+      enqueueSnackbar(`Nelze uložit: ${res.err}`, {variant: 'error'});
     }
   };
 
@@ -66,15 +83,29 @@ export default function EditFood({foodData = initialValues, allergensData, updat
             />
             <Autocomplete
               disablePortal
-              isOptionEqualToValue={(option, value) => formik.values.allergen !== '' ? isEqual(option, value) : true}
+              isOptionEqualToValue={isEqual}
+              onChange={(_, value) => formik.setFieldValue('type', value)}
+              name='type'
+              value={formik.values.type.type !== 0 ? formik.values.type : null}
+              options={foodTypes}
+              renderInput={(params) =>
+                <TextField
+                  {...params}
+                  label="Typ jídla"
+                  error={formik.touched.type && Boolean(formik.errors.type)}
+                  helperText={formik.touched.type && formik.errors.type}
+                />
+            }
+              //todo error
+            />
+            <Autocomplete
+              disablePortal
+              isOptionEqualToValue={isEqual}//formik.values.allergen !== '' ? isEqual(option, value) : true
               onChange={(_, value) => formik.setFieldValue('allergen', value)}
-              formik={formik}
-              defaultValue={formik.values.allergen}
               name='allergen'
+              value={formik.values.allergen.alergenID !== 0 ? formik.values.allergen : null}
               options={allergensData}
-              getOptionLabel={option => option.name}
-              renderInput={(params) => <TextField {...params} error={formik.touched.allergen && Boolean(formik.errors.allergen)}
-                                                  helperText={formik.touched.allergen && formik.errors.allergen} label="Alergen"/>}
+              renderInput={(params) => <TextField {...params} label="Alergen"/>}
               //todo error
             />
             <DateTimePicker
