@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import {reparseJson} from "@/lib/base";
-import FoodMenu from "@/app/administration/food-menu/FoodMenu";
+import Foods from "@/app/administration/food-menu/Foods";
 
 const removeFood = async food => {
   'use server';
@@ -16,12 +16,12 @@ const removeFood = async food => {
   return res;
 };
 
-export default async function Page() {
+export default async function FoodPage() {
   const menuData = await getMenuData();
 
   return (
     <>
-      <FoodMenu
+      <Foods
         menuData={menuData}
         removeFood={removeFood}
       />

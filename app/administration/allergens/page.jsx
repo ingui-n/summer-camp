@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import {reparseJson} from "@/lib/base";
-import AllergensMenu from "@/app/administration/allergens/AllergensMenu";
+import Allergens from "@/app/administration/allergens/Allergens";
 
 const removeAllergen = async values => {
   'use server';
@@ -14,12 +14,12 @@ const removeAllergen = async values => {
   return {ok: true};
 };
 
-export default async function Page() {
+export default async function AllergensPage() {
   const allergensData = await getAllergensData();
 
   return (
     <>
-      <AllergensMenu
+      <Allergens
         allergensData={allergensData}
         removeAllergen={removeAllergen}
       />

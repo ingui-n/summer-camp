@@ -8,7 +8,7 @@ import {useState} from "react";
 import {useSnackbar} from 'notistack';
 import {Button} from "@mui/material";
 
-export default function AllergensMenu({allergensData, removeAllergen}) {
+export default function Allergens({allergensData, removeAllergen}) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [allergens, setAllergens] = useState(allergensData);
   const {enqueueSnackbar} = useSnackbar();

@@ -10,7 +10,7 @@ import {useSnackbar} from 'notistack';
 import {Button} from "@mui/material";
 import {foodTypes} from "@/lib/base";
 
-export default function FoodMenu({menuData, removeFood}) {//todo data are not updated after changes
+export default function Foods({menuData, removeFood}) {//todo data are not updated after changes
   const [openConfirm, setOpenConfirm] = useState(false);
   const [foods, setFoods] = useState(menuData);
   const {enqueueSnackbar} = useSnackbar();
