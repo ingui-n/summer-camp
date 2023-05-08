@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {Button} from "@mui/material";
 import moment from "moment";
-import {foodTypes} from "@/lib/base";
+import {foodTypes} from "@/lib/configTypes";
 
 const getFormattedDates = (from, to) => {
   const dateFrom = moment(from).format('DD.MM.\xa0HH:mm');

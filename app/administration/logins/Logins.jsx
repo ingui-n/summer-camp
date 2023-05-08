@@ -3,39 +3,34 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Link from "next/link";
-import moment from 'moment';
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import {useState} from "react";
 import {useSnackbar} from 'notistack';
 import {Button} from "@mui/material";
-import {foodTypes} from "@/lib/configTypes";
+import {loginRoles} from "@/lib/configTypes";
 
-export default function Foods({menuData, removeFood}) {//todo data are not updated after changes
+export default function Logins({loginsData, removeLogin}) {
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [foods, setFoods] = useState(menuData);
+  const [logins, setLogins] = useState(loginsData);
   const {enqueueSnackbar} = useSnackbar();
 
-  const getFormattedDate = date => {
-    return moment(date).format('DD.MM.\xa0HH:mm');
-  };
-
-  const handleRemoveFood = async ({food}) => {
-    const oldFoods = [...foods];
-    setFoods(foods => foods.filter(({foodID}) => foodID !== food.foodID));
+  const handleRemoveLogin = async (login) => {
+    const oldLogins = [...logins];
+    setLogins(logins => logins.filter(({loginID}) => loginID !== login.loginID));
     setOpenConfirm(false);
 
-    const {ok} = await removeFood(food);
+    const {ok, err} = await removeLogin(login);
 
     if (!ok) {
-      setFoods(oldFoods);
-      enqueueSnackbar('Při odstraňování nastala chyba', {variant: 'error'});
+      setLogins(oldLogins);
+      enqueueSnackbar(`Při odstraňování nastala chyba: ${err}`, {variant: 'error'});
     } else {
-      enqueueSnackbar('Položka odstraněna', {variant: 'success'});
+      enqueueSnackbar('Uživatel odstraněn', {variant: 'success'});
     }
   }
 
-  const handleOpenRemoveDialog = async (food) => {
-    setDialogProps({...dialogProps, message: `Chcete odstranit položku "${food.food_name}"?`, data: {food}});
+  const handleOpenRemoveDialog = async (data) => {
+    setDialogProps({...dialogProps, message: `Chcete odstranit uživatele "${data.name}"?`, data});
     setOpenConfirm(true);
   }
 
@@ -46,38 +41,34 @@ export default function Foods({menuData, removeFood}) {//todo data are not updat
     denyText: 'Zrušit',
     onClose: () => setOpenConfirm(false),
     onDeny: () => setOpenConfirm(false),
-    onSubmit: handleRemoveFood
+    onSubmit: handleRemoveLogin
   });
 
   return (
     <>
       <div className="content">
-        <Link href='/administration/food-menu/add'>
+        <Link href='/administration/logins/add'>
           <Button variant='outlined' color='info' className='config-button'>Vytvořit</Button>
         </Link>
         <table>
           <thead>
           <tr>
-            <th>Název</th>
-            <th>Popis</th>
-            <th>Typ</th>
-            <th>Alergen</th>
-            <th>Čas</th>
+            <th>Login</th>
+            <th>Email</th>
+            <th>Typ uživatele</th>
             <th>Upravit</th>
             <th>Odstranit</th>
           </tr>
           </thead>
           <tbody>
-          {foods?.map((food, index) => (
+          {logins?.map((login, index) => (
             <tr key={index}>
-              <td>{food.food_name}</td>
-              <td>{food.description}</td>
-              <td>{foodTypes.find(({type}) => type === food.type)?.label || ''}</td>
-              <td>{food.number}</td>
-              <td>{getFormattedDate(food.time)}</td>
+              <td>{login.name}</td>
+              <td>{login.email}</td>
+              <td>{loginRoles.find(({role}) => role === login.role)?.label || ''}</td>
               <td className='action-button'>
                 <IconButton aria-label="edit">
-                  <Link href={`/administration/food-menu/edit/${food.foodID}`}>
+                  <Link href={`/administration/logins/edit/${login.loginID}`}>
                     <EditIcon/>
                   </Link>
                 </IconButton>
@@ -85,7 +76,7 @@ export default function Foods({menuData, removeFood}) {//todo data are not updat
               <td className='action-button'>
                 <IconButton
                   aria-label="remove"
-                  onClick={async () => await handleOpenRemoveDialog(food)}
+                  onClick={async () => await handleOpenRemoveDialog(login)}
                 >
                   <DeleteIcon/>
                 </IconButton>

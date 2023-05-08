@@ -9,7 +9,7 @@ import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";
 import {isEqual} from "lodash";
 import {useSnackbar} from "notistack";
 import {useRouter} from "next/navigation";
-import {foodTypes} from "@/lib/base";
+import {foodTypes} from "@/lib/configTypes";
 
 const initialValues = {
   food_name: "",
@@ -31,6 +31,11 @@ export default function EditFood({foodData = initialValues, allergensData, updat
 
   const submitForm = async (values) => {
     values.time = values.time.format();
+
+    if (values.type.type === 0) {
+      enqueueSnackbar(`Vyberte typ jídla`, {variant: 'error'});
+      return;
+    }
 
     let res;
 

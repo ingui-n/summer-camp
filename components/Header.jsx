@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import {useRef} from "react";
 import {useSession} from "next-auth/react";
+import {isUserAdmin} from "@/lib/base";
 
 export default function Header() {
   const {status, data} = useSession();
@@ -14,10 +15,6 @@ export default function Header() {
     burgerRef.current.classList.toggle('toggle');
   };
 
-  const isUserAdmin = () => {
-    return data?.user.role === 0;
-  }
-
   return (
     <header>
       <nav>
@@ -28,7 +25,7 @@ export default function Header() {
         <ul className="nav-links" ref={navLinksRef}>
           <li><Link href='/about'>O NÁS</Link></li>
           <li><Link href='/camp'>TÁBORY</Link></li>
-          {isUserAdmin()
+          {data && isUserAdmin(data.user)
             && <li><Link href='/administration'>ADMINISTRACE</Link></li>
           }
           {status === 'unauthenticated'

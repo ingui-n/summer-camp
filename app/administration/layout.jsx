@@ -4,6 +4,7 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {redirect} from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/app/administration/Navbar";
+import {isUserAdmin} from "@/lib/base";
 
 export const metadata = {
   title: 'Administration',
@@ -16,7 +17,7 @@ export default async function Layout({children}) {
     redirect('/');
   }
 
-  if (session.user.role !== 0) {
+  if (!isUserAdmin(session.user)) {
     redirect('/');
   }
 
@@ -30,6 +31,7 @@ export default async function Layout({children}) {
               <li><Link href='/administration/food-menu'>Jídla</Link></li>
               <li><Link href='/administration/allergens'>Alergeny</Link></li>
               <li><Link href='/administration/jobs'>Pracovní pozice</Link></li>
+              <li><Link href='/administration/logins'>Uživatelé</Link></li>
             </ul>
           </div>
           {children}
