@@ -3,21 +3,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Link from "next/link";
-import moment from 'moment';
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import {useState} from "react";
 import {useSnackbar} from 'notistack';
 import {Button} from "@mui/material";
 import {foodTypes} from "@/lib/configTypes";
+import {getFormattedDate} from "@/lib/base";
 
 export default function Foods({menuData, removeFood}) {//todo data are not updated after changes
   const [openConfirm, setOpenConfirm] = useState(false);
   const [foods, setFoods] = useState(menuData);
   const {enqueueSnackbar} = useSnackbar();
-
-  const getFormattedDate = date => {
-    return moment(date).format('DD.MM.\xa0HH:mm');
-  };
 
   const handleRemoveFood = async ({food}) => {
     const oldFoods = [...foods];

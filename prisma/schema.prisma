@@ -34,9 +34,9 @@ model food {
   name        String  @db.VarChar(75)
   type        Int     @db.TinyInt
   foodID      Int     @id @default(autoincrement())
-  menuID      Int     @db.UnsignedInt
+  menuID      Int
   alergen     alergen @relation(fields: [alergenID], references: [alergenID], onDelete: NoAction, onUpdate: NoAction, map: "food_ibfk_1")
-  menu        menu    @relation(fields: [menuID], references: [menuID], onDelete: NoAction, onUpdate: NoAction, map: "food_ibfk_2")
+  menu        menu    @relation(fields: [menuID], references: [menuID], onUpdate: Restrict, map: "food_ibfk_2")
 
   @@index([alergenID], map: "alergenID")
   @@index([menuID], map: "menuID")
@@ -50,15 +50,15 @@ model job {
 }
 
 model legal_representative {
-  psc                    BigInt
+  zip                    String   @db.VarChar(5)
   city                   String   @db.VarChar(30)
-  adress                 String   @db.VarChar(50)
+  address                String   @db.VarChar(50)
   birthdate              DateTime @db.Date
   email                  String   @db.VarChar(50)
   first_name             String   @db.VarChar(30)
   last_name              String   @db.VarChar(30)
-  phone_number           BigInt
-  pin                    BigInt
+  phone                  String   @db.VarChar(9)
+  pin                    String   @db.VarChar(10)
   legal_representativeID Int      @id @default(autoincrement()) @db.UnsignedInt
   user                   user[]
 }
@@ -90,7 +90,7 @@ model logs_registration {
 
 model menu {
   time   DateTime @db.DateTime(0)
-  menuID Int      @id @default(autoincrement()) @db.UnsignedInt
+  menuID Int      @id @default(autoincrement())
   campID Int
   food   food[]
   camp   camp     @relation(fields: [campID], references: [campID], onUpdate: Restrict, map: "FK_Menu_Camp")
@@ -99,12 +99,11 @@ model menu {
 }
 
 model profile {
-  modification_date DateTime @db.DateTime(0)
-  suffix            String   @db.VarChar(8)
-  type              String   @db.VarChar(50)
-  upload_date       DateTime @db.DateTime(0)
-  profileID         Int      @id @default(autoincrement()) @db.UnsignedInt
-  worker            worker[]
+  suffix      String   @db.VarChar(8)
+  upload_date DateTime @db.DateTime(0)
+  image       Bytes
+  profileID   Int      @id @default(autoincrement()) @db.UnsignedInt
+  worker      worker[]
 }
 
 model program {
@@ -137,36 +136,34 @@ model user {
   birthdate              DateTime              @db.Date
   first_name             String                @db.VarChar(30)
   last_name              String                @db.VarChar(30)
-  phone_number           BigInt
-  pin                    BigInt
+  phone                  String                @db.VarChar(9)
+  pin                    String                @db.VarChar(10)
   userID                 Int                   @id @default(autoincrement())
-  directoryID            Int?                  @db.UnsignedInt
   legal_representativeID Int?                  @db.UnsignedInt
   loginID                Int?                  @db.UnsignedInt
   registration           registration[]
   legal_representative   legal_representative? @relation(fields: [legal_representativeID], references: [legal_representativeID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Legal_representative")
   login                  login?                @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_User_Login")
 
-  @@index([directoryID], map: "FK_User_Directory")
   @@index([legal_representativeID], map: "FK_User_Legal_representative")
   @@index([loginID], map: "FK_User_Login")
 }
 
 model worker {
-  email        String? @db.VarChar(50)
-  first_name   String? @db.VarChar(35)
-  last_name    String? @db.VarChar(35)
-  phone_number BigInt?
-  title        String? @db.VarChar(20)
-  workerID     Int     @id @unique(map: "workerID") @default(autoincrement())
-  campID       Int
-  jobID        Int     @db.UnsignedInt
-  loginID      Int?    @db.UnsignedInt
-  profileID    Int     @db.UnsignedInt
-  job          job     @relation(fields: [jobID], references: [jobID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Job")
-  login        login?  @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Login")
-  profile      profile @relation(fields: [profileID], references: [profileID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Profile")
-  camp         camp    @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Camp")
+  email        String   @db.VarChar(50)
+  first_name   String   @db.VarChar(35)
+  last_name    String   @db.VarChar(35)
+  phone_number String   @db.VarChar(9)
+  title        String?  @db.VarChar(20)
+  workerID     Int      @id @unique(map: "workerID") @default(autoincrement())
+  campID       Int?
+  jobID        Int      @db.UnsignedInt
+  loginID      Int?     @db.UnsignedInt
+  profileID    Int?     @db.UnsignedInt
+  job          job      @relation(fields: [jobID], references: [jobID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Job")
+  login        login?   @relation(fields: [loginID], references: [loginID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Login")
+  profile      profile? @relation(fields: [profileID], references: [profileID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Profile")
+  camp         camp?    @relation(fields: [campID], references: [campID], onDelete: NoAction, onUpdate: NoAction, map: "FK_Worker_Camp")
 
   @@index([campID], map: "FK_Worker_Camp")
   @@index([jobID], map: "FK_Worker_Job")
@@ -175,44 +172,58 @@ model worker {
 }
 
 view view_menu_food_alergen {
-  id           String?  @db.VarChar(36)
+  id           String   @default("") @db.VarChar(36)
   number       String   @db.VarChar(30)
   alergen_name String   @db.VarChar(50)
   description  String?  @db.VarChar(750)
   food_name    String   @db.VarChar(75)
   type         Int      @db.TinyInt
-  menuID       Int      @default(0) @db.UnsignedInt
+  menuID       Int      @default(0)
   time         DateTime @db.DateTime(0)
   foodID       Int      @unique @default(0)
   campID       Int      @default(0)
 }
 
-view view_user_represantative {
-  id               String?  @db.VarChar(36)
-  first_name       String   @db.VarChar(30)
-  last_name        String   @db.VarChar(30)
-  birthdate        DateTime @db.Date
-  pin              BigInt
-  phone_number     BigInt
-  userID           Int      @unique @default(0)
-  rep_first_name   String   @db.VarChar(30)
-  rep_last_name    String   @db.VarChar(30)
-  rep_birthdate    DateTime @db.Date
-  rep_pin          BigInt
-  rep_email        String   @db.VarChar(50)
-  rep_phone_number BigInt
-  campID           Int      @default(0)
+view view_worker_job_profile {
+  id           String   @default("") @db.VarChar(36)
+  last_name    String   @db.VarChar(35)
+  first_name   String   @db.VarChar(35)
+  type         Int      @db.TinyInt
+  description  String?  @db.VarChar(250)
+  email        String   @db.VarChar(50)
+  phone_number String   @db.VarChar(9)
+  title        String?  @db.VarChar(20)
+  workerID     Int      @unique @default(0)
+  campID       Int      @default(0)
+  jobID        Int      @default(0) @db.UnsignedInt
+  profileID    Int      @default(0) @db.UnsignedInt
+  upload_date  DateTime @db.DateTime(0)
+  suffix       String   @db.VarChar(8)
+  image        Bytes
 }
 
-view view_worker_job {
-  id           String? @db.VarChar(36)
-  last_name    String? @db.VarChar(35)
-  first_name   String? @db.VarChar(35)
-  type         Int     @db.TinyInt
-  description  String? @db.VarChar(250)
-  email        String? @db.VarChar(50)
-  phone_number BigInt?
-  title        String? @db.VarChar(20)
-  workerID     Int     @unique @default(0)
-  campID       Int     @default(0)
+view view_user_representative_login_registration {
+  id                     String?  @db.VarChar(36)
+  childFirstname         String   @db.VarChar(30)
+  childSurname           String   @db.VarChar(30)
+  childBirthdate         DateTime @db.Date
+  childPin               String   @db.VarChar(10)
+  childPhone             String   @db.VarChar(9)
+  userID                 Int      @default(0)
+  parentFirstname        String   @db.VarChar(30)
+  parentSurname          String   @db.VarChar(30)
+  parentBirthdate        DateTime @db.Date
+  parentPin              String   @db.VarChar(10)
+  parentEmail            String   @db.VarChar(50)
+  parentPhone            String   @db.VarChar(9)
+  parentStreet           String   @db.VarChar(50)
+  parentCity             String   @db.VarChar(30)
+  parentZip              String   @db.VarChar(5)
+  legal_representativeID Int      @default(0) @db.UnsignedInt
+  campID                 Int      @default(0)
+  loginID                Int      @unique @default(0) @db.UnsignedInt
+  login                  String   @db.VarChar(30)
+  registrationID         Int      @default(0) @db.UnsignedInt
+  isPaid                 Boolean
+  registrationDate       DateTime @db.DateTime(0)
 }

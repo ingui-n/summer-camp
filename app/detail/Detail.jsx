@@ -59,6 +59,7 @@ export default function Detail({campData, programData, menuData}) {
         <section className='detail-links'>
           <Link href='/camp'><Button variant="outlined">TÁBORY</Button></Link>
           <Link href='/register'><Button variant="contained">PŘIHLÁSIT SE</Button></Link>
+        {/* todo if is already registered show message about it instead */}
         </section>
 
         <section>

@@ -56,7 +56,7 @@
     padding: 10px 20px;
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 3;
     height: 6vh;
 }
 
@@ -116,6 +116,10 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+
+.application-checkbox-label {
+    justify-content: flex-end;
 }
 
 @media screen and (max-width: 968px) {
