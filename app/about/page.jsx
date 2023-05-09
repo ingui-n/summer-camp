@@ -13,6 +13,6 @@ export default async function Page() {
 }
 
 const getCampData = async () => {
-  const camp = await prisma.camp.findUnique({where: {campID: 2}});
+  const camp = await prisma.camp.findUnique({where: {campID: parseInt(process.env.CAMP_ID)}});
   return reparseJson(camp);
 };

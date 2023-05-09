@@ -6,7 +6,7 @@ const addFood = async values => {
   'use server';
 
   try {
-    await prisma.$queryRaw`CALL pr_menu_food(${values.allergen.alergenID}, ${process.env.CAMP_ID}, ${values.food_name}, ${values.description}, ${values.type.type}, ${values.time})`;
+    await prisma.$queryRaw`CALL pr_menu_food(${values.allergen.alergenID}, ${parseInt(process.env.CAMP_ID)}, ${values.food_name}, ${values.description}, ${values.type.type}, ${values.time})`;
   } catch ({meta}) {
     return {ok: false, err: meta.message};
   }

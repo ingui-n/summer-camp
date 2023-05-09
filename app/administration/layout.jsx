@@ -32,6 +32,7 @@ export default async function Layout({children}) {
               <li><Link href='/administration/allergens'>Alergeny</Link></li>
               <li><Link href='/administration/jobs'>Pracovní pozice</Link></li>
               <li><Link href='/administration/logins'>Uživatelé</Link></li>
+              <li><Link href='/administration/program'>Program</Link></li>
             </ul>
           </div>
           {children}

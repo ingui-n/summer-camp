@@ -17,8 +17,10 @@ const updateFood = async values => {
   }
 
   try {
-    await prisma.food.update({data: food, where: {foodID: values.foodID}});
-    await prisma.menu.update({data: menu, where: {menuID: values.menuID}});
+    await prisma.$transaction([
+      prisma.food.update({data: food, where: {foodID: values.foodID}}),
+      prisma.menu.update({data: menu, where: {menuID: values.menuID}})
+    ]);
   } catch ({meta}) {
     return {ok: false, err: meta.message};
   }
@@ -49,7 +51,7 @@ export default async function Page({params}) {
 }
 
 const getFood = async (id) => {
-  const menu = await prisma.view_menu_food_alergen.findFirst({where: {campID: 2, foodID: parseInt(id)}});
+  const menu = await prisma.view_menu_food_alergen.findFirst({where: {campID: parseInt(process.env.CAMP_ID), foodID: parseInt(id)}});
   return menu ? reparseJson(menu) : null;
 };
 

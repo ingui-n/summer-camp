@@ -29,31 +29,17 @@ export default async function Page() {
 }
 
 const getCampData = async () => {
-  const camp = await prisma.camp.findUnique({where: {campID: 2}});
+  const camp = await prisma.camp.findUnique({where: {campID: parseInt(process.env.CAMP_ID)}});
   return reparseJson(camp);
 };
 
 const getProgramData = async () => {
-  const program = await prisma.program.findMany({where: {campID: 2}});
+  const program = await prisma.program.findMany({where: {campID: parseInt(process.env.CAMP_ID)}});
   return reparseJson(program);
 };
 
 const getMenuData = async () => {
-  const menu = await prisma.view_menu_food_alergen.findMany({where: {campID: 2}});
-
-  /** showcase */
-  /*const menu = await prisma.menu.findFirst({where: {campID: 2}});
-
-  if (menu) {
-    let foods = await prisma.food.findMany({where: {menuID: menu.menuID}});
-
-    for (const food of foods) {
-      food.alergen = await prisma.alergen.findUnique({where: {number: food.alergenID}});
-    }
-
-    return reparseJson(foods);
-  }*/
-
+  const menu = await prisma.view_menu_food_alergen.findMany({where: {campID: parseInt(process.env.CAMP_ID)}});
   return reparseJson(menu);
 };
 

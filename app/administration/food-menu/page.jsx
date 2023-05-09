@@ -30,6 +30,6 @@ export default async function FoodPage() {
 }
 
 const getMenuData = async () => {
-  const menu = await prisma.view_menu_food_alergen.findMany({where: {campID: 2}});
+  const menu = await prisma.view_menu_food_alergen.findMany({where: {campID: parseInt(process.env.CAMP_ID)}});
   return reparseJson(menu);
 };
