@@ -49,7 +49,7 @@ export default function Foods({menuData, removeFood}) {//todo data are not updat
     <>
       <div className="content">
         <Link href='/administration/food-menu/add'>
-          <Button variant='outlined' color='info' className='config-button'>Vytvořit</Button>
+          <Button className='config-button' variant='outlined' color='info'>Vytvořit</Button>
         </Link>
         <table>
           <thead>

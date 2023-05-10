@@ -5,6 +5,7 @@ import {useEffect, useRef, useState} from "react";
 
 export default function About({campData}) {
   const bannerRef = useRef(null);
+  const aboutUsDescriptionRef = useRef(null);
   const [description, setDescription] = useState({
     aboutUs: '',
     email: '',
@@ -13,7 +14,9 @@ export default function About({campData}) {
   });
 
   useEffect(() => {
-    setDescription(JSON.parse(campData.description));
+    const description = JSON.parse(campData.description);
+    aboutUsDescriptionRef.current.innerHTML = description.aboutUs;
+    setDescription(description);
   }, [campData]);
 
   useEffect(() => {
@@ -56,7 +59,7 @@ export default function About({campData}) {
       <main className='about-main'>
         <section>
           <h1 className='about-h1'>O nás</h1>
-          <p>{description.aboutUs}</p>
+          <div ref={aboutUsDescriptionRef}></div>
         </section>
 
         <section>

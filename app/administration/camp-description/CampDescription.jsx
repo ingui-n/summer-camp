@@ -151,7 +151,11 @@ export default function CampDescription({campData = initialValues, updateCamp}) 
                 language: 'cs',
                 toolbar_mode: 'wrap',
                 branding: false,
-                content_style: 'body {font-family: Helvetica, Arial, sans-serif; font-size: 14px;}'
+                content_style: 'body {font-family: Helvetica, Arial, sans-serif; font-size: 14px;}',
+                init_instance_callback : () => {
+                  const freeTiny = document.querySelector('.tox .tox-notification--in');
+                  freeTiny.style.display = 'none';
+                }
               }}
             />
             <Link href='/detail'><h3>Text v detailu tábora:</h3></Link>
@@ -165,7 +169,11 @@ export default function CampDescription({campData = initialValues, updateCamp}) 
                 language: 'cs',
                 toolbar_mode: 'wrap',
                 branding: false,
-                content_style: 'body {font-family: Helvetica, Arial, sans-serif; font-size: 14px;}'
+                content_style: 'body {font-family: Helvetica, Arial, sans-serif; font-size: 14px;}',
+                init_instance_callback : () => {
+                  const freeTiny = document.querySelector('.tox .tox-notification--in');
+                  freeTiny.style.display = 'none';
+                }
               }}
             />
             <Link href='/about'><h3>Text v sekci o nás:</h3></Link>
@@ -179,7 +187,11 @@ export default function CampDescription({campData = initialValues, updateCamp}) 
                 language: 'cs',
                 toolbar_mode: 'wrap',
                 branding: false,
-                content_style: 'body {font-family: Helvetica, Arial, sans-serif; font-size: 14px;}'
+                content_style: 'body {font-family: Helvetica, Arial, sans-serif; font-size: 14px;}',
+                init_instance_callback : () => {
+                  const freeTiny = document.querySelector('.tox .tox-notification--in');
+                  freeTiny.style.display = 'none';
+                }
               }}
             />
           </div>

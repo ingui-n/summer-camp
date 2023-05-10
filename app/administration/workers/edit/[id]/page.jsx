@@ -29,9 +29,8 @@ const updateWorker = async values => {
       prisma.worker.update({data: worker, where: {workerID: values.workerID}}),
       prisma.profile.update({data: profile, where: {profileID: values.profileID}}),
     ]);
-  } catch (err) {
-    console.log(err)
-    return {ok: false, err: 'meta.message'};
+  } catch ({meta}) {
+    return {ok: false, err: meta.message};
   }
 
   revalidatePath('/administration/workers');

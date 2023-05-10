@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useRef} from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {Button} from "@mui/material";
@@ -9,13 +9,12 @@ import {getFormattedDates} from "@/lib/base";
 
 
 export default function Detail({campData, programData, menuData, isUserRegistered}) {
-  const [description, setDescription] = useState({
-    mainDescription: '',
-  });
   const bannerRef = useRef(null);
+  const mainDescriptionRef = useRef(null);
 
   useEffect(() => {
-    setDescription(JSON.parse(campData.description));
+    const description = JSON.parse(campData.description);
+    mainDescriptionRef.current.innerHTML = description.mainDescription;
   }, [campData]);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ export default function Detail({campData, programData, menuData, isUserRegistere
       <main className='detail'>
         <section>
           <h1>{campData.name}</h1>
-          <p>{description.mainDescription}</p>
+          <div ref={mainDescriptionRef}></div>
           <br/>
           <h3>Cena: {campData.price} Kč</h3>
         </section>

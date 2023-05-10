@@ -16,8 +16,6 @@ export default function Applications({applicationsData, removeApplication}) {
   const [applications, setApplications] = useState(applicationsData);
   const {enqueueSnackbar} = useSnackbar();
 
-  console.log(applicationsData)
-
   const handleRemoveUser = async registration => {
     const oldApplications = [...applications];
     setApplications(applications => applications.filter(({registrationID}) => registrationID !== registration.registrationID));

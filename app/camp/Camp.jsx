@@ -1,16 +1,15 @@
 'use client';
 
-import {useEffect, useState} from "react";
+import {useEffect, useRef} from "react";
 import Link from "next/link";
 import Button from "@mui/base/Button";
 
 export default function Camp({campData}) {
-  const [description, setDescription] = useState({
-    shortDescription: '',
-  });
+  const shortDescriptionRef = useRef(null);
 
   useEffect(() => {
-    setDescription(JSON.parse(campData.description));
+    const description = JSON.parse(campData.description);
+    shortDescriptionRef.current.innerHTML = description.shortDescription;
   }, [campData]);
 
   return (
@@ -19,7 +18,7 @@ export default function Camp({campData}) {
         <div className="camp-card-under">
           <div className="camp-card">
             <h6 className='camp-card-header'><strong>{campData.name}</strong></h6>
-            <span>{description.mainDescription}</span>
+            <div ref={shortDescriptionRef}></div>
             <Link href='/detail'>
               <Button className="camp-card-footer">PODROBNOSTI</Button>
             </Link>

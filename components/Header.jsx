@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import {useRef} from "react";
 import {useSession} from "next-auth/react";
-import {isUserAdmin} from "@/lib/base";
+import {isUserBasic} from "@/lib/base";
 
 export default function Header() {
   const {status, data} = useSession();
@@ -25,7 +25,7 @@ export default function Header() {
         <ul className="nav-links" ref={navLinksRef}>
           <li><Link href='/about'>O NÁS</Link></li>
           <li><Link href='/camp'>TÁBORY</Link></li>
-          {data && isUserAdmin(data.user)
+          {data && !isUserBasic(data.user)
             && <li><Link href='/administration'>ADMINISTRACE</Link></li>
           }
           {status === 'unauthenticated'
