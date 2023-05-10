@@ -16,13 +16,13 @@ export const authOptions = {
         const {name, password} = credentials;
 
         if (!name || !password) {
-          throw new Error("Login nebo heslo je prázdné");
+          throw new Error("Login nebo heslo není vyplněné");
         }
 
         const user = await prisma.login.findUnique({where: {name}});
 
         if (!user || !(await compare(password, user.password))) {
-          throw new Error("Špatný login nebo email");
+          throw new Error("Špatný login nebo heslo");
         }
 
         return user;
