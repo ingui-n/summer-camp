@@ -122,6 +122,14 @@
     justify-content: flex-end;
 }
 
+.profile-button {
+    width: fit-content;
+}
+
+.profile-image {
+    max-width: 150px;
+}
+
 @media screen and (max-width: 968px) {
     .admin-body .container {
         flex-direction: column;

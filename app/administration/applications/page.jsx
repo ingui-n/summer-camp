@@ -1,6 +1,9 @@
 import prisma from "@/lib/prisma";
-import {reparseJson} from "@/lib/base";
+import {isUserAdmin, reparseJson} from "@/lib/base";
 import Applications from "@/app/administration/applications/Applications";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {redirect} from "next/navigation";
 
 const removeApplication = async values => {
   'use server';
@@ -19,6 +22,12 @@ const removeApplication = async values => {
 };
 
 export default async function ApplicationsPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!isUserAdmin(session.user)) {
+    redirect('/administration');
+  }
+
   const applicationsData = await getApplicationsData();
 
   return (
@@ -32,8 +41,8 @@ export default async function ApplicationsPage() {
 }
 
 const getApplicationsData = async () => {
-  const applications = await prisma.view_user_representative_login_registration.findMany(
-    {where: {campID: parseInt(process.env.CAMP_ID)}}
-  );
+  const applications = await prisma.view_user_representative_login_registration.findMany({
+    where: {campID: parseInt(process.env.CAMP_ID)}
+  });
   return reparseJson(applications);
 };

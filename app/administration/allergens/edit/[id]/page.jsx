@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import {reparseJson} from "@/lib/base";
 import {redirect} from "next/navigation";
 import EditAllergen from "@/app/administration/allergens/edit/[id]/EditAllergen";
+import {revalidatePath} from "next/cache";
 
 const updateAllergen = async values => {
   'use server';
@@ -17,6 +18,7 @@ const updateAllergen = async values => {
     return {ok: false, err: meta.message};
   }
 
+  revalidatePath('/administration/allergens');
   return {ok: true};
 };
 

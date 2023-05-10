@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import {reparseJson} from "@/lib/base";
 import EditFood from "@/app/administration/food-menu/edit/[id]/EditFood";
 import {redirect} from "next/navigation";
+import {revalidatePath} from "next/cache";
 
 const updateFood = async values => {
   'use server';
@@ -25,6 +26,7 @@ const updateFood = async values => {
     return {ok: false, err: meta.message};
   }
 
+  revalidatePath('/administration/food-menu');
   return {ok: true};
 };
 

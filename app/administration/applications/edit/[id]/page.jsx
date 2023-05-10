@@ -1,7 +1,10 @@
 import prisma from "@/lib/prisma";
-import {reparseJson} from "@/lib/base";
+import {isUserAdmin, reparseJson} from "@/lib/base";
 import {redirect} from "next/navigation";
 import EditApplication from "@/app/administration/applications/edit/[id]/EditApplication";
+import {revalidatePath} from "next/cache";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 const updateApplication = async values => {
   'use server';
@@ -40,10 +43,17 @@ const updateApplication = async values => {
     return {ok: false, err: meta.message};
   }
 
+  revalidatePath('/administration/applications');
   return {ok: true};
 };
 
 export default async function Page({params}) {
+  const session = await getServerSession(authOptions);
+
+  if (!isUserAdmin(session.user)) {
+    redirect('/administration');
+  }
+
   const application = await getApplicationData(params.id);
 
   if (!application) {
@@ -62,8 +72,8 @@ export default async function Page({params}) {
 }
 
 const getApplicationData = async id => {
-  const application = await prisma.view_user_representative_login_registration.findFirst(
-    {where: {registrationID: parseInt(id)}}
-  );
+  const application = await prisma.view_user_representative_login_registration.findFirst({
+    where: {registrationID: parseInt(id)}
+  });
   return reparseJson(application);
 };

@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import {reparseJson} from "@/lib/base";
 import {redirect} from "next/navigation";
 import EditProgram from "@/app/administration/program/edit/[id]/EditProgram";
+import {revalidatePath} from "next/cache";
 
 const updateProgram = async values => {
   'use server';
@@ -19,6 +20,7 @@ const updateProgram = async values => {
     return {ok: false, err: meta.message};
   }
 
+  revalidatePath('/administration/program');
   return {ok: true};
 };
 

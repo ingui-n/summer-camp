@@ -99,9 +99,9 @@ model menu {
 }
 
 model profile {
-  suffix      String   @db.VarChar(8)
+  type        String   @db.VarChar(20)
   upload_date DateTime @db.DateTime(0)
-  image       Bytes
+  image       Bytes    @db.MediumBlob
   profileID   Int      @id @default(autoincrement()) @db.UnsignedInt
   worker      worker[]
 }
@@ -185,21 +185,21 @@ view view_menu_food_alergen {
 }
 
 view view_worker_job_profile {
-  id           String   @default("") @db.VarChar(36)
-  last_name    String   @db.VarChar(35)
-  first_name   String   @db.VarChar(35)
-  type         Int      @db.TinyInt
-  description  String?  @db.VarChar(250)
-  email        String   @db.VarChar(50)
-  phone_number String   @db.VarChar(9)
-  title        String?  @db.VarChar(20)
-  workerID     Int      @unique @default(0)
-  campID       Int      @default(0)
-  jobID        Int      @default(0) @db.UnsignedInt
-  profileID    Int      @default(0) @db.UnsignedInt
-  upload_date  DateTime @db.DateTime(0)
-  suffix       String   @db.VarChar(8)
-  image        Bytes
+  id                String   @default("") @db.VarChar(36)
+  surname           String   @db.VarChar(35)
+  firstname         String   @db.VarChar(35)
+  jobType           Int      @db.TinyInt
+  jobDescription    String?  @db.VarChar(250)
+  email             String   @db.VarChar(50)
+  phone             String   @db.VarChar(9)
+  title             String?  @db.VarChar(20)
+  workerID          Int      @unique @default(0)
+  campID            Int      @default(0)
+  jobID             Int      @default(0) @db.UnsignedInt
+  profileID         Int      @default(0) @db.UnsignedInt
+  profileUploadDate DateTime @db.DateTime(0)
+  profileImageType  String   @db.VarChar(20)
+  profileImage      Bytes    @db.MediumBlob
 }
 
 view view_user_representative_login_registration {
