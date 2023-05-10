@@ -8,9 +8,8 @@ import {foodTypes} from "@/lib/configTypes";
 import {getFormattedDates} from "@/lib/base";
 
 
-export default function Detail({campData, programData, menuData}) {
+export default function Detail({campData, programData, menuData, isUserRegistered}) {
   const [description, setDescription] = useState({
-    name: '',
     mainDescription: '',
   });
   const bannerRef = useRef(null);
@@ -52,61 +51,68 @@ export default function Detail({campData, programData, menuData}) {
       </div>
       <main className='detail'>
         <section>
-          <h1>{description.name}</h1>
+          <h1>{campData.name}</h1>
           <p>{description.mainDescription}</p>
+          <br/>
+          <h3>Cena: {campData.price} Kč</h3>
         </section>
 
         <section className='detail-links'>
           <Link href='/camp'><Button variant="outlined">TÁBORY</Button></Link>
-          <Link href='/register'><Button variant="contained">PŘIHLÁSIT SE</Button></Link>
-        {/* todo if is already registered show message about it instead */}
+          {!isUserRegistered &&
+            <Link href='/register'><Button variant="contained">PŘIHLÁSIT SE</Button></Link>
+          }
         </section>
 
-        <section>
-          <h1>JÍDELNÍČEK</h1>
-          <table>
-            <thead>
-            <tr>
-              <th>TYP</th>
-              <th>Název</th>
-              <th>Popis</th>
-              <th>Alergen</th>
-            </tr>
-            </thead>
-            <tbody>
-            {menuData && menuData.map((food, index) => (
-              <tr key={index}>
-                <td>{foodTypes.find(({type}) => type === food.type)?.label || ''}</td>
-                <td>{food.food_name}</td>
-                <td>{food.description}</td>
-                <td>{food.number} - {food.alergen_name}</td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </section>
+        {isUserRegistered &&
+          <>
+            <section>
+              <h1>JÍDELNÍČEK</h1>
+              <table>
+                <thead>
+                <tr>
+                  <th>TYP</th>
+                  <th>Název</th>
+                  <th>Popis</th>
+                  <th>Alergen</th>
+                </tr>
+                </thead>
+                <tbody>
+                {menuData && menuData.map((food, index) => (
+                  <tr key={index}>
+                    <td>{foodTypes.find(({type}) => type === food.type)?.label || ''}</td>
+                    <td>{food.food_name}</td>
+                    <td>{food.description}</td>
+                    <td>{food.number} - {food.alergen_name}</td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+            </section>
 
-        <section>
-          <h1>PROGRAM</h1>
-          <table>
-            <thead>
-            <tr>
-              <th>Od - Do</th>
-              <th>Název</th>
-              <th>Popis</th>
-            </tr>
-            </thead>
-            <tbody>
-            {programData && programData.map((program, index) => (
-              <tr key={index}>
-                <td>{getFormattedDates(program.from, program.to)}</td>
-                <td>{program.name}</td>
-                <td>{program.description}</td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </section>
+            <section>
+              <h1>PROGRAM</h1>
+              <table>
+                <thead>
+                <tr>
+                  <th>Od - Do</th>
+                  <th>Název</th>
+                  <th>Popis</th>
+                </tr>
+                </thead>
+                <tbody>
+                {programData && programData.map((program, index) => (
+                  <tr key={index}>
+                    <td>{getFormattedDates(program.from, program.to)}</td>
+                    <td>{program.name}</td>
+                    <td>{program.description}</td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+            </section>
+          </>
+        }
       </main>
     </>
   );

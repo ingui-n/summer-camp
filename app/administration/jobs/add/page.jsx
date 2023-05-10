@@ -1,5 +1,9 @@
 import prisma from "@/lib/prisma";
 import EditJob from "@/app/administration/jobs/edit/[id]/EditJob";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {isUserAdmin} from "@/lib/base";
+import {redirect} from "next/navigation";
 
 const addJob = async values => {
   'use server';
@@ -19,6 +23,12 @@ const addJob = async values => {
 };
 
 export default async function Page() {
+  const session = await getServerSession(authOptions);
+
+  if (!isUserAdmin(session.user)) {
+    redirect('/administration');
+  }
+
   return (
     <>
       <EditJob

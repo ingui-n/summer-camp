@@ -16,6 +16,7 @@ export default async function Page() {
   const campData = await getCampData();
   const programData = await getProgramData();
   const menuData = await getMenuData();
+  const isRegistered = await isUserRegistered(session.user.id);
 
   return (
     <>
@@ -23,6 +24,7 @@ export default async function Page() {
         campData={campData}
         programData={programData}
         menuData={menuData}
+        isUserRegistered={isRegistered}
       />
     </>
   );
@@ -41,5 +43,10 @@ const getProgramData = async () => {
 const getMenuData = async () => {
   const menu = await prisma.view_menu_food_alergen.findMany({where: {campID: parseInt(process.env.CAMP_ID)}});
   return reparseJson(menu);
+};
+
+const isUserRegistered = async loginID => {
+  const user = await prisma.user.findFirst({where: {loginID: loginID}});
+  return Boolean(user);
 };
 

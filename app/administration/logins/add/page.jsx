@@ -1,6 +1,10 @@
 import prisma from "@/lib/prisma";
 import EditLogin from "@/app/administration/logins/edit/[id]/EditLogin";
 import {hash} from "bcrypt";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {isUserAdmin} from "@/lib/base";
+import {redirect} from "next/navigation";
 
 const addLogin = async values => {
   'use server';
@@ -22,6 +26,12 @@ const addLogin = async values => {
 };
 
 export default async function Page() {
+  const session = await getServerSession(authOptions);
+
+  if (!isUserAdmin(session.user)) {
+    redirect('/administration');
+  }
+
   return (
     <>
       <EditLogin

@@ -1,6 +1,9 @@
 import prisma from "@/lib/prisma";
-import {reparseJson} from "@/lib/base";
+import {isUserAdmin, reparseJson} from "@/lib/base";
 import Logins from "@/app/administration/logins/Logins";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {redirect} from "next/navigation";
 
 const removeLogin = async values => {
   'use server';
@@ -15,6 +18,12 @@ const removeLogin = async values => {
 };
 
 export default async function LoginsPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!isUserAdmin(session.user)) {
+    redirect('/administration');
+  }
+
   const loginsData = await getLoginsData();
 
   return (

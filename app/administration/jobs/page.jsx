@@ -1,6 +1,9 @@
 import prisma from "@/lib/prisma";
-import {reparseJson} from "@/lib/base";
+import {isUserAdmin, reparseJson} from "@/lib/base";
 import Jobs from "@/app/administration/jobs/Jobs";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {redirect} from "next/navigation";
 
 const removeJob = async values => {
   'use server';
@@ -15,6 +18,12 @@ const removeJob = async values => {
 };
 
 export default async function JobsPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!isUserAdmin(session.user)) {
+    redirect('/administration');
+  }
+
   const jobsData = await getJobsData();
 
   return (
