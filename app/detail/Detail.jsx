@@ -8,7 +8,7 @@ import {foodTypes} from "@/lib/configTypes";
 import {getFormattedDates} from "@/lib/base";
 
 
-export default function Detail({campData, programData, menuData, isUserRegistered}) {
+export default function Detail({campData, programData, menuData, registration}) {
   const bannerRef = useRef(null);
   const mainDescriptionRef = useRef(null);
 
@@ -40,6 +40,7 @@ export default function Detail({campData, programData, menuData, isUserRegistere
           width={1500}
           height={1500}
           className='active'
+          priority={true}
         />
         <Image
           src="/about-image2.jpg"
@@ -54,16 +55,28 @@ export default function Detail({campData, programData, menuData, isUserRegistere
           <div ref={mainDescriptionRef}></div>
           <br/>
           <h3>Cena: {campData.price} Kč</h3>
+
+          {registration &&
+            <>
+              <br/>
+              <h2>Jste zaregistrováni</h2>
+              <br/>
+              {registration.is_paid
+              ? <h2>Vaše přihláška ja zaplacena</h2>
+              : <h2>Vaše přihláška není zaplacena</h2>
+              }
+            </>
+          }
         </section>
 
         <section className='detail-links'>
           <Link href='/camp'><Button variant="outlined">TÁBORY</Button></Link>
-          {!isUserRegistered &&
+          {!registration &&
             <Link href='/register'><Button variant="contained">PŘIHLÁSIT SE</Button></Link>
           }
         </section>
 
-        {isUserRegistered &&
+        {registration &&
           <>
             <section>
               <h1>JÍDELNÍČEK</h1>

@@ -33,7 +33,7 @@ export default function RegisterForm({register}) {
   const {data: session} = useSession();
   const router = useRouter();
 
-  const submitForm = async (values) => {
+  const submitForm = async ({...values}) => {
     values.childBirthdate = values.childBirthdate.format();
     values.parentBirthdate = values.parentBirthdate.format();
     values.loginID = session.user.id;

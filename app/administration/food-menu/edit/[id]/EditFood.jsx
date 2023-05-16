@@ -29,7 +29,7 @@ export default function EditFood({foodData = initialValues, allergensData, updat
     foodData.type = foodTypes.find(({type}) => type === foodData.type) || {label: '', type: 0};
   }
 
-  const submitForm = async (values) => {
+  const submitForm = async ({...values}) => {
     values.time = values.time.format();
 
     if (values.type.type === 0) {

@@ -16,7 +16,7 @@ export default async function Page() {
   const campData = await getCampData();
   const programData = await getProgramData();
   const menuData = await getMenuData();
-  const isRegistered = await isUserRegistered(session.user.id);
+  const registration = await getUserRegistration(session.user.id);
 
   return (
     <>
@@ -24,7 +24,7 @@ export default async function Page() {
         campData={campData}
         programData={programData}
         menuData={menuData}
-        isUserRegistered={isRegistered}
+        registration={registration}
       />
     </>
   );
@@ -45,8 +45,14 @@ const getMenuData = async () => {
   return reparseJson(menu);
 };
 
-const isUserRegistered = async loginID => {
+const getUserRegistration = async loginID => {
   const user = await prisma.user.findFirst({where: {loginID: loginID}});
-  return Boolean(user);
+
+  if (user) {
+    const registration = await prisma.registration.findFirst({where: {userID: user.userID}});
+    return reparseJson(registration);
+  }
+
+  return null;
 };
 

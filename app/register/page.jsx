@@ -1,5 +1,6 @@
 import RegisterForm from "@/app/register/RegisterForm";
 import {Prisma} from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 const register = async values => {
   'use server';

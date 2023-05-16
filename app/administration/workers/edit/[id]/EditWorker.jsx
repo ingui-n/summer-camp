@@ -47,7 +47,7 @@ export default function EditWorker({workerData = initialValues, jobsData, update
     }
   }, [workerData]);
 
-  const submitForm = async values => {
+  const submitForm = async ({...values}) => {
     // values.loginID = session.user.id;
 
     if (values.jobType.jobID === 0) {

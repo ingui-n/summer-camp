@@ -17,7 +17,7 @@ export default function EditJob({jobData = initialValues, updateJob, addJob}) {
   const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
 
-  const submitForm = async (values) => {
+  const submitForm = async ({...values}) => {
     let res;
 
     if (addJob instanceof Function) {

@@ -47,7 +47,7 @@ export default function EditApplication({applicationData = initialValues, update
     applicationData.parentZip = formatStringByPattern('000 00', applicationData.parentZip);
   }
 
-  const submitForm = async (values) => {
+  const submitForm = async ({...values}) => {
     values.childBirthdate = values.childBirthdate.format();
     values.parentBirthdate = values.parentBirthdate.format();
 

@@ -26,7 +26,7 @@ const updateFood = async values => {
     return {ok: false, err: meta.message};
   }
 
-  revalidatePath('/administration/food-menu');
+  revalidatePath(`/administration/food-menu`);
   return {ok: true};
 };
 

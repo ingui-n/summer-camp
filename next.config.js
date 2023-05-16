@@ -7,6 +7,9 @@ const nextConfig = {
   /*compiler: {
     styledComponents: true
   },*/
+  images: {
+    domains: ['http.cat'],
+  },
   modularizeImports: {
     '@mui/material': {
       transform: '@mui/material/{{member}}'

@@ -17,7 +17,7 @@ export default function EditAllergen({allergenData = initialValues, updateAllerg
   const {enqueueSnackbar} = useSnackbar();
   const router = useRouter();
 
-  const submitForm = async (values) => {
+  const submitForm = async ({...values}) => {
     let res;
 
     if (addAllergen instanceof Function) {

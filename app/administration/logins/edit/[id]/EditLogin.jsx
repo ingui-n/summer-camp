@@ -29,7 +29,7 @@ export default function EditLogin({loginData = initialValues, updateLogin, addLo
     loginData.role = loginRoles.find(({role}) => role === loginData.role) || {label: '', role: 0};
   }
 
-  const submitForm = async (values, bag) => {
+  const submitForm = async ({...values}, bag) => {
     bag.setFieldValue('password', '');
 
     if (values.role.role === 0) {

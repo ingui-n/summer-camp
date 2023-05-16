@@ -43,7 +43,7 @@ export default function CampDescription({campData = initialValues, updateCamp}) 
   campData.date_from = moment(campData.date_from);
   campData.date_to = moment(campData.date_to);
 
-  const submitForm = async values => {
+  const submitForm = async ({...values}) => {
     values.date_from = values.date_from.format();
     values.date_to = values.date_to.format();
 

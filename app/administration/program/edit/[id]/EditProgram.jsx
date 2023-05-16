@@ -24,7 +24,7 @@ export default function EditProgram({programData = initialValues, updateProgram,
   programData.from = moment(programData.from);
   programData.to = moment(programData.to);
 
-  const submitForm = async (values) => {
+  const submitForm = async ({...values}) => {
     values.from = values.from.format();
     values.to = values.to.format();
 

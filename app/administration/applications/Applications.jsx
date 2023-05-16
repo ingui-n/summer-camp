@@ -7,7 +7,6 @@ import Link from "next/link";
 import ConfirmationDialog from "@/components/ConfirmationDialog";
 import {useState} from "react";
 import {useSnackbar} from 'notistack';
-import {Button} from "@mui/material";
 import formatStringByPattern from "format-string-by-pattern";
 import {getFormattedDateWithYear} from "@/lib/base";
 
@@ -52,6 +51,7 @@ export default function Applications({applicationsData, removeApplication}) {
         <table>
           <thead>
           <tr>
+            <th>Login</th>
             <th>Jméno</th>
             <th>Příjmení</th>
             <th>Email zákonného z.</th>
@@ -65,6 +65,7 @@ export default function Applications({applicationsData, removeApplication}) {
           <tbody>
           {applications?.map((application, index) => (
             <tr key={index}>
+              <td>{application.login}</td>
               <td>{application.childFirstname}</td>
               <td>{application.childSurname}</td>
               <td>{application.parentEmail}</td>

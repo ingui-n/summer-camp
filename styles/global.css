@@ -304,3 +304,16 @@ nav {
     transform: rotate(45deg) translate(-8px, -3px);
     transition: transform 0.3s ease-in;
 }
+
+.not-found-container {
+    height: 100vh;
+}
+
+.not-found-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+}
